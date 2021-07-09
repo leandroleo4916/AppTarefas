@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_marginRight="6dp"
+    android:layout_marginLeft="6dp"
+    android:layout_marginTop="6dp"
+    android:elevation="10dp"
+    android:background="@drawable/back_fundo"
+    android:id="@+id/toolbar_tarefas"
+    android:layout_height="80dp">
+
+    <TextView
+        android:id="@+id/text_nome_tarefa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Descrição"
+        android:textColor="@color/letras"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/radio_tarefa"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.270" />
+
+    <TextView
+        android:id="@+id/text_data_tarefa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:singleLine="true"
+        android:textStyle="italic"
+        android:text="Data"
+        android:textColor="@color/letras"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="@+id/text_nome_tarefa"
+        app:layout_constraintTop_toBottomOf="@+id/text_nome_tarefa" />
+
+    <TextView
+        android:id="@+id/text_data3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:singleLine="true"
+        android:text=" - "
+        android:textColor="@color/letras"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/text_data_tarefa"
+        app:layout_constraintStart_toEndOf="@+id/text_data_tarefa"
+        app:layout_constraintTop_toTopOf="@+id/text_data_tarefa"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/option_tarefa"
+        android:layout_width="26dp"
+        android:layout_height="26dp"
+        android:layout_marginEnd="18dp"
+        android:src="@drawable/ic_option"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/text_hora_tarefa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:textStyle="italic"
+        android:singleLine="true"
+        android:text="Hora"
+        android:textColor="@color/letras"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/text_data_tarefa"
+        app:layout_constraintStart_toEndOf="@+id/text_data3"
+        app:layout_constraintTop_toTopOf="@+id/text_data_tarefa"
+        app:layout_constraintVertical_bias="0.0" />
+
+
+    <RadioButton
+        android:id="@+id/radio_tarefa"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="18dp"
+        android:buttonTint="@color/letras"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

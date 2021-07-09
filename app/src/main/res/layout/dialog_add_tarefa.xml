@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <Toolbar
+        android:id="@+id/toolbar5"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@color/colorPrimary"
+        app:layout_constraintEnd_toEndOf="@+id/text_tarefa"
+        app:layout_constraintStart_toStartOf="@+id/text_tarefa"
+        app:layout_constraintTop_toBottomOf="@+id/text_tarefa" />
+
+    <EditText
+        android:id="@+id/text_tarefa"
+        android:layout_width="300dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+        android:hint="O que você vai fazer?"
+        android:textColorHint="@color/colorAccent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Quando?"
+        app:layout_constraintEnd_toStartOf="@+id/toolbar5"
+        app:layout_constraintTop_toBottomOf="@+id/text_tarefa"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/text_data_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="12/12/2021"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/textView3"
+        app:layout_constraintTop_toBottomOf="@+id/textView3"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Horas?"
+        app:layout_constraintStart_toEndOf="@+id/toolbar5"
+        app:layout_constraintTop_toBottomOf="@+id/text_tarefa"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/text_hora_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="18:00"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/textView4"
+        app:layout_constraintTop_toBottomOf="@+id/textView4"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/image_caledar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/calendario"
+        app:layout_constraintStart_toStartOf="@+id/text_tarefa"
+        app:layout_constraintTop_toBottomOf="@+id/text_tarefa"
+        tools:ignore="ContentDescription,MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/image_clock"
+        android:layout_width="31dp"
+        android:layout_height="31dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/clock"
+        app:layout_constraintEnd_toEndOf="@+id/text_tarefa"
+        app:layout_constraintTop_toBottomOf="@+id/text_tarefa"
+        tools:ignore="ContentDescription" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
