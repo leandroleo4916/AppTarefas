@@ -87,8 +87,8 @@
 
     <ImageView
         android:id="@+id/image_clock"
-        android:layout_width="31dp"
-        android:layout_height="31dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:layout_marginEnd="20dp"
         android:src="@drawable/clock"
         app:layout_constraintEnd_toEndOf="@+id/text_tarefa"

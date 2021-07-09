@@ -1,12 +1,10 @@
 package com.example.app_tarefas_diarias.repository
 
 import android.content.ContentValues
-import android.content.Context
 import android.database.Cursor
 import com.example.app_tarefas_diarias.constants.ConstantsTarefa
 import com.example.app_tarefas_diarias.database.DataBase
 import com.example.app_tarefas_diarias.entity.EntityTarefa
-import com.squareup.okhttp.Dispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -66,6 +64,29 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
                 cursor?.close()
             } catch (e: Exception) { }
             tarefa
+        }
+    }
+
+    suspend fun updateTarefas(tarefa: EntityTarefa): Boolean {
+
+        return withContext(Dispatchers.Default) {
+            try {
+                val db = mDataBase.writableDatabase
+                val selection = ConstantsTarefa.TAREFA.COLUNAS.ID + " = ?"
+                val args = arrayOf(tarefa.id.toString())
+                val updateValues = ContentValues()
+                updateValues.put(ConstantsTarefa.TAREFA.COLUNAS.ID, tarefa.id)
+                updateValues.put(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE, tarefa.complete)
+                updateValues.put(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION, tarefa.description)
+                updateValues.put(ConstantsTarefa.TAREFA.COLUNAS.DATE, tarefa.date)
+                updateValues.put(ConstantsTarefa.TAREFA.COLUNAS.HORA, tarefa.hora)
+
+                db.update(ConstantsTarefa.TAREFA.TABLE_NAME, updateValues, selection, args)
+                true
+
+            } catch (e: Exception) {
+                false
+            }
         }
     }
 }
