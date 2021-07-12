@@ -2,16 +2,18 @@
     <string name="app_name">Tarefa Diaria</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="sair">Sair</string>
-    <string name="opcoes">Opções</string>
     <string name="cancelado">Cancelado!</string>
     <string name="cancelar">Cancelar</string>
-    <string name="editar_funcionario">Editar Funcionário</string>
-    <string name="editar">EDITAR</string>
+    <string name="editar_tarefa">Editar Tarefa</string>
+    <string name="editar">Editar</string>
     <string name="Add_tarefa">Adicionar tarefa</string>
     <string name="deseja_sair">Deseja sair do App?</string>
     <string name="adicionado_sucesso">Adicionado com sucesso!</string>
+    <string name="editado_sucesso">Editado com sucesso!</string>
+    <string name="excluido_sucesso">Excluido com sucesso!</string>
     <string name="salvar">Salvar</string>
-    <string name="Cancelar">Cancelar</string>
     <string name="nao_adicionado">Não foi possível adicionar!</string>
+    <string name="nao_editado">Não foi possível editar!</string>
+    <string name="nao_excluido">Não foi possível excluir!</string>
     <string name="tarefas_diarias">Tarefas Diárias</string>
 </resources>

@@ -3,14 +3,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_marginRight="6dp"
-    android:layout_marginLeft="6dp"
-    android:layout_marginTop="6dp"
+    android:layout_marginRight="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="8dp"
     android:elevation="10dp"
     android:background="@drawable/back_fundo"
     android:id="@+id/toolbar_tarefas"
-    android:layout_height="80dp">
+    android:layout_width="match_parent"
+    android:layout_height="90dp">
 
     <TextView
         android:id="@+id/text_nome_tarefa"
@@ -54,13 +54,26 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
-        android:id="@+id/option_tarefa"
-        android:layout_width="26dp"
-        android:layout_height="26dp"
+        android:id="@+id/edit_tarefa"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
         android:layout_marginEnd="18dp"
-        android:src="@drawable/ic_option"
+        android:src="@drawable/ic_edit_24"
+        android:clickable="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <ImageView
+        android:id="@+id/delete_tarefa"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginEnd="12dp"
+        android:src="@drawable/ic_delete"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/edit_tarefa"
         app:layout_constraintTop_toTopOf="parent"
         tools:ignore="MissingConstraints" />
 

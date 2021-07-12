@@ -6,34 +6,53 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.app_tarefas_diarias.entity.EntityTarefa
 import com.example.app_tarefas_diarias.repository.RepositoryTarefas
-import kotlinx.coroutines.*
 
-class ViewModel (private val mSearchTarefa: RepositoryTarefas, application: Application): AndroidViewModel(application) {
+class ViewModel (private val repository: RepositoryTarefas, application: Application): AndroidViewModel(application) {
 
     private val mListTarefa = MutableLiveData<ArrayList<EntityTarefa>>()
     val listTarefa: LiveData<ArrayList<EntityTarefa>> = mListTarefa
 
-    private val mResult = MutableLiveData<Boolean>()
-    val result: LiveData<Boolean> = mResult
+    private val mResultSet = MutableLiveData<Boolean>()
+    val resultSet: LiveData<Boolean> = mResultSet
+
+    private val mResultEdit = MutableLiveData<Boolean>()
+    val resultEdit: LiveData<Boolean> = mResultEdit
+
+    private val mResultDelete = MutableLiveData<Boolean>()
+    val resultDelete: LiveData<Boolean> = mResultDelete
 
     fun getTarefas(){
-
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(2000)
-            val listTarefas = withContext(Dispatchers.Default) {
-                    mSearchTarefa.getTarefas()
-                }
-            mListTarefa.value = listTarefas
-        }
+        val listTarefas = repository.getTarefas()
+        mListTarefa.value = listTarefas
     }
 
     fun setTarefas(complete: String, descrip: String, date: String, hora: String) {
-
-        CoroutineScope(Dispatchers.Main).launch {
-            val ret = withContext(Dispatchers.Default) {
-                mSearchTarefa.setTarefas(complete, descrip, date, hora)
+        when {
+            repository.setTarefas(complete, descrip, date, hora) -> {
+                getTarefas()
+                mResultSet.value = true
             }
-            mResult.value = ret
+            else -> { mResultSet.value = false }
+        }
+    }
+
+    fun editTarefas(complete: String, descrip: String, date: String, hora: String) {
+        when {
+            repository.editTarefas(complete, descrip, date, hora) -> {
+                getTarefas()
+                mResultEdit.value = true
+            }
+            else -> { mResultEdit.value = false }
+        }
+    }
+
+    fun deleteTarefas(descrip: String) {
+        when {
+            repository.deleteTarefas(descrip) -> {
+                getTarefas()
+                mResultDelete.value = true
+            }
+            else -> { mResultDelete.value = false }
         }
     }
 }
