@@ -3,11 +3,11 @@ package com.example.app_tarefas_diarias.activitys
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.*
 import androidx.core.view.get
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.app_tarefas_diarias.R
@@ -19,7 +19,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
-class ActivityTarefa : AppCompatActivity(), View.OnClickListener, OnItemClickListener {
+class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickListener {
 
     private lateinit var mAdapterTarefa: AdapterTarefa
     private val mViewModel: ViewModel by viewModel()
@@ -39,21 +39,22 @@ class ActivityTarefa : AppCompatActivity(), View.OnClickListener, OnItemClickLis
     }
 
     override fun onItemClick(position: Int) {
-        val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
-        val date = recycler_tarefas[position].text_data_tarefa.text.toString()
-        val hora = recycler_tarefas[position].text_hora_tarefa.text.toString()
 
         recycler_tarefas[position].delete_tarefa.setOnClickListener {
-
+            val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
             deleteTarefa(name, position)
         }
 
         recycler_tarefas[position].edit_tarefa.setOnClickListener {
+            val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
+            val date = recycler_tarefas[position].text_data_tarefa.text.toString()
+            val hora = recycler_tarefas[position].text_hora_tarefa.text.toString()
             dialogAddTarefa(name, date, hora)
         }
     }
 
     private fun searchTarefa(){
+
         mViewModel.getTarefas()
     }
 
@@ -61,13 +62,13 @@ class ActivityTarefa : AppCompatActivity(), View.OnClickListener, OnItemClickLis
         mViewModel.listTarefa.observe(this, {
             when (it.size) {
                 0 -> {
-                    mAdapterTarefa.udateTarefas(it)
+                    mAdapterTarefa.updateTarefas(it)
                     progress_tarefa.visibility = View.GONE
                     text_preguica.visibility = View.VISIBLE
                     image_preguica.visibility = View.VISIBLE
                 }
                 else -> {
-                    mAdapterTarefa.udateTarefas(it)
+                    mAdapterTarefa.updateTarefas(it)
                     progress_tarefa.visibility = View.GONE
                     text_preguica.visibility = View.GONE
                     image_preguica.visibility = View.GONE
@@ -158,7 +159,7 @@ class ActivityTarefa : AppCompatActivity(), View.OnClickListener, OnItemClickLis
         }
 
         else {
-            val description = textTarefa.setText(nameEdit).toString()
+            textTarefa.setText(nameEdit)
             dateText.text = dateEdit
             horaText.text = horaEdit
 
@@ -167,10 +168,10 @@ class ActivityTarefa : AppCompatActivity(), View.OnClickListener, OnItemClickLis
             alertDialog.setView(inflateView)
             alertDialog.setCancelable(false)
             alertDialog.setPositiveButton(getString(R.string.editar)) { _, _ ->
-
+                val description = textTarefa.text.toString()
                 when (description){
                     "" -> Toast.makeText(this, "Preencha a descrição", Toast.LENGTH_SHORT).show()
-                    else -> editTarefa("0", description, dateText.text.toString(), horaText.text.toString())
+                    else -> editTarefa("0", nameEdit, description, dateText.text.toString(), horaText.text.toString())
                 }
             }
             alertDialog.setNegativeButton(getString(R.string.cancelar)) { _, _ ->
@@ -181,43 +182,39 @@ class ActivityTarefa : AppCompatActivity(), View.OnClickListener, OnItemClickLis
     }
 
     private fun saveTarefa(complete: String, descrip: String, date: String, hora: String){
-        mViewModel.setTarefas(complete, descrip, date, hora)
-        mViewModel.resultSet.observe(this, {
-            when(it){
-                true -> {
-                    searchTarefa()
+
+            when{
+                mViewModel.setTarefas(complete, descrip, date, hora) -> {
                     Toast.makeText(this, R.string.adicionado_sucesso, Toast.LENGTH_SHORT).show()
+                    searchTarefa()
                 }
-                false -> Toast.makeText(this, R.string.nao_adicionado, Toast.LENGTH_SHORT).show()
+                else -> Toast.makeText(this, R.string.nao_adicionado, Toast.LENGTH_SHORT).show()
             }
-        })
     }
 
-    private fun editTarefa(complete: String, descrip: String, date: String, hora: String){
-        mViewModel.editTarefas(complete, descrip, date, hora)
-        mViewModel.resultEdit.observe(this, {
+    private fun editTarefa(complete: String, descrip: String, nameEdit: String, date: String, hora: String){
+
             when {
-                it -> {
+                mViewModel.editTarefas(complete, descrip, nameEdit, date, hora) -> {
                     Toast.makeText(this, R.string.editado_sucesso, Toast.LENGTH_SHORT).show()
+                    searchTarefa()
                 }
                 else -> { Toast.makeText(this, R.string.nao_editado, Toast.LENGTH_SHORT).show()
                 }
             }
-        })
     }
 
     private fun deleteTarefa(descrip: String, position: Int){
-        mViewModel.deleteTarefas(descrip)
-        mViewModel.resultDelete.observe(this, {
+
             when {
-                it -> {
+                mViewModel.deleteTarefas(descrip) -> {
+                    mAdapterTarefa.updatePosition(position)
                     Toast.makeText(this, R.string.excluido_sucesso, Toast.LENGTH_SHORT).show()
+                    searchTarefa()
                 }
                 else -> {
                     Toast.makeText(this, R.string.nao_excluido, Toast.LENGTH_SHORT).show()
                 }
             }
-        })
-
     }
 }

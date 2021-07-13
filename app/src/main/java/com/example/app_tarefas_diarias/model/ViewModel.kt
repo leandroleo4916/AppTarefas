@@ -6,53 +6,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.app_tarefas_diarias.entity.EntityTarefa
 import com.example.app_tarefas_diarias.repository.RepositoryTarefas
+import java.text.FieldPosition
 
-class ViewModel (private val repository: RepositoryTarefas, application: Application): AndroidViewModel(application) {
+class ViewModel (application: Application): AndroidViewModel(application) {
+
+    private val repository: RepositoryTarefas = RepositoryTarefas.instance(application)
 
     private val mListTarefa = MutableLiveData<ArrayList<EntityTarefa>>()
     val listTarefa: LiveData<ArrayList<EntityTarefa>> = mListTarefa
-
-    private val mResultSet = MutableLiveData<Boolean>()
-    val resultSet: LiveData<Boolean> = mResultSet
-
-    private val mResultEdit = MutableLiveData<Boolean>()
-    val resultEdit: LiveData<Boolean> = mResultEdit
-
-    private val mResultDelete = MutableLiveData<Boolean>()
-    val resultDelete: LiveData<Boolean> = mResultDelete
 
     fun getTarefas(){
         val listTarefas = repository.getTarefas()
         mListTarefa.value = listTarefas
     }
 
-    fun setTarefas(complete: String, descrip: String, date: String, hora: String) {
-        when {
-            repository.setTarefas(complete, descrip, date, hora) -> {
-                getTarefas()
-                mResultSet.value = true
-            }
-            else -> { mResultSet.value = false }
-        }
+    fun setTarefas(complete: String, descrip: String, date: String, hora: String): Boolean {
+        return repository.setTarefas(complete, descrip, date, hora)
     }
 
-    fun editTarefas(complete: String, descrip: String, date: String, hora: String) {
-        when {
-            repository.editTarefas(complete, descrip, date, hora) -> {
-                getTarefas()
-                mResultEdit.value = true
-            }
-            else -> { mResultEdit.value = false }
-        }
+    fun editTarefas(complete: String, descrip: String, nameNew: String, date: String, hora: String): Boolean {
+        return repository.editTarefas(complete, descrip, nameNew, date, hora)
     }
 
-    fun deleteTarefas(descrip: String) {
-        when {
-            repository.deleteTarefas(descrip) -> {
-                getTarefas()
-                mResultDelete.value = true
-            }
-            else -> { mResultDelete.value = false }
-        }
+    fun deleteTarefas(descrip: String): Boolean {
+        return repository.deleteTarefas(descrip)
     }
 }

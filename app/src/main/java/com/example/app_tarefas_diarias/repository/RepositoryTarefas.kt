@@ -1,14 +1,26 @@
 package com.example.app_tarefas_diarias.repository
 
 import android.content.ContentValues
+import android.content.Context
 import android.database.Cursor
 import com.example.app_tarefas_diarias.constants.ConstantsTarefa
 import com.example.app_tarefas_diarias.database.DataBase
 import com.example.app_tarefas_diarias.entity.EntityTarefa
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
-class RepositoryTarefas (private val mDataBase: DataBase) {
+class RepositoryTarefas private constructor(context: Context) {
+
+    private val mDataBase: DataBase = DataBase(context)
+
+    companion object{
+        private lateinit var repository: RepositoryTarefas
+
+        fun instance (context: Context): RepositoryTarefas{
+            if (!:: repository.isInitialized){
+                repository = RepositoryTarefas(context)
+            }
+            return repository
+        }
+    }
 
     fun setTarefas(complete: String, descrip: String, date: String, hora: String): Boolean {
 
@@ -66,19 +78,22 @@ class RepositoryTarefas (private val mDataBase: DataBase) {
     }
 
 
-    fun editTarefas(complete: String, descrip: String, date: String, hora: String): Boolean {
+    fun editTarefas(complete: String, descrip: String, nameNew: String, date: String, hora: String): Boolean {
 
         return try {
             val db = mDataBase.writableDatabase
+
+            val contentValues = ContentValues()
+            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE, complete)
+            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION, nameNew)
+            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.DATE, date)
+            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.HORA, hora)
+
             val selection = ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION + " = ?"
             val args = arrayOf(descrip)
-            val updateValues = ContentValues()
-            updateValues.put(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE, complete)
-            updateValues.put(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION, descrip)
-            updateValues.put(ConstantsTarefa.TAREFA.COLUNAS.DATE, date)
-            updateValues.put(ConstantsTarefa.TAREFA.COLUNAS.HORA, hora)
 
-            db.update(ConstantsTarefa.TAREFA.TABLE_NAME, updateValues, selection, args)
+            db.update(ConstantsTarefa.TAREFA.TABLE_NAME, contentValues, selection, args)
+
             true
 
         } catch (e: Exception) {

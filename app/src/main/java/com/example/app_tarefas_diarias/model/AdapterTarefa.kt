@@ -16,7 +16,7 @@ import kotlinx.android.synthetic.main.recycler_tarefas.view.*
 
 @Suppress("UNREACHABLE_CODE")
 class AdapterTarefa(private val application: Application, private val listener: OnItemClickListener
-                    ) : RecyclerView.Adapter<AdapterTarefa.ViewHolderTarefa>() {
+                    ): RecyclerView.Adapter<AdapterTarefa.ViewHolderTarefa>() {
 
     private var mListTarefa: ArrayList<EntityTarefa> = arrayListOf()
 
@@ -55,18 +55,19 @@ class AdapterTarefa(private val application: Application, private val listener: 
         }
 
         override fun onClick(v: View?) {
-
             val position = bindingAdapterPosition
             listener.onItemClick(position)
-
         }
     }
 
-    fun udateTarefas(list: ArrayList<EntityTarefa>){
-
-        mListTarefa = if (list.size > 1) {
-            list.reversed() as ArrayList<EntityTarefa>
-        } else { list }
+    fun updateTarefas(list: ArrayList<EntityTarefa>){
+        mListTarefa = list
         notifyDataSetChanged()
+    }
+
+    fun updatePosition(position: Int){
+        mListTarefa.removeAt(position)
+        notifyItemRemoved(position)
+        notifyItemRangeChanged(position, mListTarefa.size)
     }
 }

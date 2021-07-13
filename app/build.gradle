@@ -59,4 +59,7 @@ dependencies {
     //noinspection GradleCompatible
     implementation 'com.android.support:support-v4:22.1.1'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
+    //noinspection GradleCompatible
+    implementation 'com.android.support:recyclerview-v7:27.0.2'
 }
