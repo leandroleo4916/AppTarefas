@@ -32,6 +32,10 @@ class ViewModel (private val repository: RepositoryTarefas, application: Applica
         }
     }
 
+    fun getDescription(name: String): Boolean {
+        return repository.getDescription(name)
+    }
+
     fun setTarefas(complete: String, descrip: String, date: String, hora: String): Boolean {
         return repository.setTarefas(complete, descrip, date, hora)
     }

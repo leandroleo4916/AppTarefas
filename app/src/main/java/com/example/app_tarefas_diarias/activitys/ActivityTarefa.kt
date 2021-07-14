@@ -54,15 +54,15 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun searchTarefaInit(){
+    private fun searchTarefaInit() {
         mViewModel.getTarefasInit()
     }
 
-    private fun searchTarefa(){
+    private fun searchTarefa() {
         mViewModel.getTarefas()
     }
 
-    private fun observe(){
+    private fun observe() {
         mViewModel.listTarefa.observe(this, {
             when (it.size) {
                 0 -> {
@@ -81,19 +81,19 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         })
     }
 
-    private fun listener(){
-        image_toolbar_tarefa.setOnClickListener(this)
+    private fun listener() {
+        image_filter_toolbar.setOnClickListener(this)
         float_bottom_tarefa.setOnClickListener(this)
     }
 
     override fun onClick(view: View?) {
-        when(view){
-            image_toolbar_tarefa -> dialogAddTarefa("", "", "")
+        when (view) {
+            image_filter_toolbar -> dialogAddTarefa("", "", "")
             float_bottom_tarefa -> dialogAddTarefa("", "", "")
         }
     }
 
-    private fun dialogAddTarefa(nameEdit: String, dateEdit: String, horaEdit: String){
+    private fun dialogAddTarefa(nameEdit: String, dateEdit: String, horaEdit: String) {
 
         val inflateView = layoutInflater.inflate(R.layout.dialog_add_tarefa, null)
         val textTarefa = inflateView.findViewById<EditText>(R.id.text_tarefa)
@@ -113,7 +113,11 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 dateText.text = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(data.time)
             }
             DatePickerDialog(
-                this, dataTime, data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH)
+                this,
+                dataTime,
+                data.get(Calendar.YEAR),
+                data.get(Calendar.MONTH),
+                data.get(Calendar.DAY_OF_MONTH)
             ).show()
         }
 
@@ -131,7 +135,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             ).show()
         }
 
-        if (nameEdit == ""){
+        if (nameEdit == "") {
 
             // Captures current date
             val date = Calendar.getInstance().time
@@ -150,18 +154,25 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             alertDialog.setCancelable(false)
             alertDialog.setPositiveButton(getString(R.string.salvar)) { _, _ ->
 
-                when (val description = textTarefa.text.toString()){
-                    "" -> Toast.makeText(this, R.string.preencha, Toast.LENGTH_SHORT).show()
-                    else -> saveTarefa("0", description, dateText.text.toString(), horaText.text.toString())
+                val description = textTarefa.text.toString()
+                when {
+                    description == "" -> {
+                        Toast.makeText(this, R.string.preencha, Toast.LENGTH_SHORT).show()
+                    }
+                    mViewModel.getDescription(description) -> {
+                        Toast.makeText(this, R.string.descricao_existe, Toast.LENGTH_SHORT).show()
+                    }
+                    else -> {
+                        saveTarefa("0", description, dateText.text.toString(), horaText.text.toString())
+                    }
                 }
             }
             alertDialog.setNegativeButton(getString(R.string.cancelar)) { _, _ ->
                 Toast.makeText(this, R.string.cancelado, Toast.LENGTH_SHORT).show()
             }
             alertDialog.create().show()
-        }
 
-        else {
+        } else {
             textTarefa.setText(nameEdit)
             dateText.text = dateEdit
             horaText.text = horaEdit
@@ -171,9 +182,20 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             alertDialog.setView(inflateView)
             alertDialog.setCancelable(false)
             alertDialog.setPositiveButton(getString(R.string.editar)) { _, _ ->
-                when (val description = textTarefa.text.toString()){
-                    "" -> Toast.makeText(this, R.string.preencha, Toast.LENGTH_SHORT).show()
-                    else -> editTarefa("0", nameEdit, description, dateText.text.toString(), horaText.text.toString())
+
+                val description = textTarefa.text.toString()
+                when  {
+                    description == "" -> {
+                        Toast.makeText(this, R.string.preencha, Toast.LENGTH_SHORT).show()
+                    }
+                    mViewModel.getDescription(description) -> {
+                        Toast.makeText(this, R.string.descricao_existe, Toast.LENGTH_SHORT).show()
+                    }
+                    else -> editTarefa("0",
+                        nameEdit,
+                        description,
+                        dateText.text.toString(),
+                        horaText.text.toString())
                 }
             }
             alertDialog.setNegativeButton(getString(R.string.cancelar)) { _, _ ->
@@ -183,40 +205,40 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun saveTarefa(complete: String, descrip: String, date: String, hora: String){
+    private fun saveTarefa(complete: String, descrip: String, date: String, hora: String) {
 
-            when{
-                mViewModel.setTarefas(complete, descrip, date, hora) -> {
-                    Toast.makeText(this, R.string.adicionado_sucesso, Toast.LENGTH_SHORT).show()
-                    searchTarefa()
-                }
-                else -> Toast.makeText(this, R.string.nao_adicionado, Toast.LENGTH_SHORT).show()
+        when {
+            mViewModel.setTarefas(complete, descrip, date, hora) -> {
+                Toast.makeText(this, R.string.adicionado_sucesso, Toast.LENGTH_SHORT).show()
+                searchTarefa()
             }
+            else -> Toast.makeText(this, R.string.nao_adicionado, Toast.LENGTH_SHORT).show()
+        }
     }
 
-    private fun editTarefa(complete: String, descrip: String, nameEdit: String, date: String, hora: String){
+    private fun editTarefa(complete: String, descrip: String, nameEdit: String, date: String, hora: String, ) {
 
-            when {
-                mViewModel.editTarefas(complete, descrip, nameEdit, date, hora) -> {
-                    Toast.makeText(this, R.string.editado_sucesso, Toast.LENGTH_SHORT).show()
-                    searchTarefa()
-                }
-                else -> { Toast.makeText(this, R.string.nao_editado, Toast.LENGTH_SHORT).show()
-                }
+        when {
+            mViewModel.editTarefas(complete, descrip, nameEdit, date, hora) -> {
+                Toast.makeText(this, R.string.editado_sucesso, Toast.LENGTH_SHORT).show()
+                searchTarefa()
             }
+            else -> {
+                Toast.makeText(this, R.string.nao_editado, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
-    private fun deleteTarefa(descrip: String, position: Int){
-
-            when {
-                mViewModel.deleteTarefas(descrip) -> {
-                    mAdapterTarefa.updatePosition(position)
-                    Toast.makeText(this, R.string.excluido_sucesso, Toast.LENGTH_SHORT).show()
-                    searchTarefa()
-                }
-                else -> {
-                    Toast.makeText(this, R.string.nao_excluido, Toast.LENGTH_SHORT).show()
-                }
+    private fun deleteTarefa(descrip: String, position: Int) {
+        when {
+            mViewModel.deleteTarefas(descrip) -> {
+                mAdapterTarefa.updatePosition(position)
+                Toast.makeText(this, R.string.excluido_sucesso, Toast.LENGTH_SHORT).show()
+                searchTarefa()
             }
+            else -> {
+                Toast.makeText(this, R.string.nao_excluido, Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

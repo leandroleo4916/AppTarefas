@@ -17,4 +17,5 @@
     <string name="nao_editado">Não foi possível editar!</string>
     <string name="nao_excluido">Não foi possível excluir!</string>
     <string name="tarefas_diarias">Tarefas Diárias</string>
+    <string name="descricao_existe">Descrição já existe!</string>
 </resources>

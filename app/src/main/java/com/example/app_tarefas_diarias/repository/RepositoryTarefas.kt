@@ -50,23 +50,28 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
 
                 if (cursor != null && cursor.count > 0) {
                     while (cursor.moveToNext()) {
-                        val id = cursor.getInt(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.ID))
-                        val complete = cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE))
-                        val description = cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION))
-                        val date = cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.DATE))
-                        val hora = cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.HORA))
+                        val id =
+                            cursor.getInt(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.ID))
+                        val complete =
+                            cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE))
+                        val description =
+                            cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION))
+                        val date =
+                            cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.DATE))
+                        val hora =
+                            cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.HORA))
 
                         tarefa.add(EntityTarefa(id, complete, description, date, hora))
                     }
                 }
                 cursor?.close()
-            } catch (e: Exception) { }
+            } catch (e: Exception) {
+            }
             tarefa
         }
     }
 
-
-    fun editTarefas(complete: String, descrip: String, nameNew: String, date: String, hora: String): Boolean {
+    fun editTarefas(complete: String, descrip: String, nameNew: String, date: String, hora: String, ): Boolean {
 
         return try {
             val db = mDataBase.writableDatabase
@@ -102,5 +107,30 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
         } catch (e: Exception) {
             false
         }
+    }
+
+    fun getDescription(name: String): Boolean {
+
+        try {
+            val cursor: Cursor
+            val db = mDataBase.readableDatabase
+
+            val projection = arrayOf(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION)
+            val selection = ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION + " = ?"
+            val args = arrayOf(name)
+
+            cursor = db.query(ConstantsTarefa.TAREFA.TABLE_NAME, projection, selection, args,
+                null, null, null)
+
+            if (cursor != null && cursor.count > 0) {
+
+                return true
+            }
+            cursor?.close()
+
+        } catch (e: Exception) {
+            return false
+        }
+        return false
     }
 }
