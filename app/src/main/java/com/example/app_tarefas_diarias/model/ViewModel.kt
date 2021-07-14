@@ -6,18 +6,30 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.app_tarefas_diarias.entity.EntityTarefa
 import com.example.app_tarefas_diarias.repository.RepositoryTarefas
-import java.text.FieldPosition
+import kotlinx.coroutines.*
 
-class ViewModel (application: Application): AndroidViewModel(application) {
-
-    private val repository: RepositoryTarefas = RepositoryTarefas.instance(application)
+class ViewModel (private val repository: RepositoryTarefas, application: Application): AndroidViewModel(application) {
 
     private val mListTarefa = MutableLiveData<ArrayList<EntityTarefa>>()
     val listTarefa: LiveData<ArrayList<EntityTarefa>> = mListTarefa
 
+    fun getTarefasInit(){
+        CoroutineScope(Dispatchers.Main).launch {
+            delay(1500)
+            val listTarefas = withContext(Dispatchers.Default) {
+                    repository.getTarefas()
+                }
+            mListTarefa.value = listTarefas
+        }
+    }
+
     fun getTarefas(){
-        val listTarefas = repository.getTarefas()
-        mListTarefa.value = listTarefas
+        CoroutineScope(Dispatchers.Main).launch {
+            val listTarefas = withContext(Dispatchers.Default) {
+                repository.getTarefas()
+            }
+            mListTarefa.value = listTarefas
+        }
     }
 
     fun setTarefas(complete: String, descrip: String, date: String, hora: String): Boolean {

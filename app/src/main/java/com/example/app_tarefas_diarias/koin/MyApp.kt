@@ -1,7 +1,6 @@
-package com.example.app_tarefas_diarias.activitys
+package com.example.app_tarefas_diarias.koin
 
 import android.app.Application
-import com.example.app_tarefas_diarias.ui.appModules
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 

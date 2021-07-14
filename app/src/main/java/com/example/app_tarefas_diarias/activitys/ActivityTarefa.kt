@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.app_tarefas_diarias.R
+import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
 import com.example.app_tarefas_diarias.model.AdapterTarefa
 import com.example.app_tarefas_diarias.model.ViewModel
 import kotlinx.android.synthetic.main.activity_tarefa.*
@@ -33,7 +34,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         mAdapterTarefa = AdapterTarefa(application, this)
         recycler.adapter = mAdapterTarefa
 
-        searchTarefa()
+        searchTarefaInit()
         listener()
         observe()
     }
@@ -53,8 +54,11 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun searchTarefa(){
+    private fun searchTarefaInit(){
+        mViewModel.getTarefasInit()
+    }
 
+    private fun searchTarefa(){
         mViewModel.getTarefas()
     }
 
@@ -106,7 +110,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 data.set(Calendar.MONTH, month)
                 data.set(Calendar.YEAR, year)
 
-                dateText.text = SimpleDateFormat("dd/MM/YYYY", Locale.ENGLISH).format(data.time)
+                dateText.text = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(data.time)
             }
             DatePickerDialog(
                 this, dataTime, data.get(Calendar.YEAR), data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH)
@@ -131,7 +135,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
             // Captures current date
             val date = Calendar.getInstance().time
-            val dateTime = SimpleDateFormat("dd-MM-YYYY", Locale.ENGLISH)
+            val dateTime = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
             val dateCurrent = dateTime.format(date)
             dateText.text = dateCurrent.toString()
 
@@ -146,9 +150,8 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             alertDialog.setCancelable(false)
             alertDialog.setPositiveButton(getString(R.string.salvar)) { _, _ ->
 
-                val description = textTarefa.text.toString()
-                when (description){
-                    "" -> Toast.makeText(this, "Preencha a descrição", Toast.LENGTH_SHORT).show()
+                when (val description = textTarefa.text.toString()){
+                    "" -> Toast.makeText(this, R.string.preencha, Toast.LENGTH_SHORT).show()
                     else -> saveTarefa("0", description, dateText.text.toString(), horaText.text.toString())
                 }
             }
@@ -168,9 +171,8 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             alertDialog.setView(inflateView)
             alertDialog.setCancelable(false)
             alertDialog.setPositiveButton(getString(R.string.editar)) { _, _ ->
-                val description = textTarefa.text.toString()
-                when (description){
-                    "" -> Toast.makeText(this, "Preencha a descrição", Toast.LENGTH_SHORT).show()
+                when (val description = textTarefa.text.toString()){
+                    "" -> Toast.makeText(this, R.string.preencha, Toast.LENGTH_SHORT).show()
                     else -> editTarefa("0", nameEdit, description, dateText.text.toString(), horaText.text.toString())
                 }
             }

@@ -10,7 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:name="com.example.app_tarefas_diarias.activitys.MyApp"
+        android:name="com.example.app_tarefas_diarias.koin.MyApp"
         tools:ignore="AllowBackup">
         <activity android:name="com.example.app_tarefas_diarias.activitys.ActivityTarefa" >
             <intent-filter>

@@ -3,6 +3,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="sair">Sair</string>
     <string name="cancelado">Cancelado!</string>
+    <string name="preencha">Preencha a descrição!</string>
     <string name="cancelar">Cancelar</string>
     <string name="editar_tarefa">Editar Tarefa</string>
     <string name="editar">Editar</string>

@@ -6,11 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.app_tarefas_diarias.R
-import com.example.app_tarefas_diarias.activitys.ActivityTarefa
-import com.example.app_tarefas_diarias.activitys.OnItemClickListener
+import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
 import com.example.app_tarefas_diarias.entity.EntityTarefa
 import kotlinx.android.synthetic.main.recycler_tarefas.view.*
 
@@ -56,7 +54,9 @@ class AdapterTarefa(private val application: Application, private val listener: 
 
         override fun onClick(v: View?) {
             val position = bindingAdapterPosition
-            listener.onItemClick(position)
+            if (position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
         }
     }
 
