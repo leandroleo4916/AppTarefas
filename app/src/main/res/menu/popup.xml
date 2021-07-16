@@ -2,15 +2,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/click_excluir"
-        android:title="Excluir" />
+        android:id="@+id/todas"
+        android:title="Todas" />
 
     <item
-        android:id="@+id/click_editar"
-        android:title="Editar" />
+        android:id="@+id/completas"
+        android:title="Completas" />
 
     <item
-        android:id="@+id/click_detalhes"
-        android:title="Detalhes" />
+        android:id="@+id/incompletas"
+        android:title="Incompletas" />
+
+    <item
+        android:id="@+id/sair"
+        android:title="Sair" />
 
 </menu>

@@ -2,6 +2,7 @@
     <string name="app_name">Tarefa Diaria</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="sair">Sair</string>
+    <string name="ok">Ok</string>
     <string name="cancelado">Cancelado!</string>
     <string name="preencha">Preencha a descrição!</string>
     <string name="cancelar">Cancelar</string>

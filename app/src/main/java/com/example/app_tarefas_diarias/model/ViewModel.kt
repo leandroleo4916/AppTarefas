@@ -32,6 +32,15 @@ class ViewModel (private val repository: RepositoryTarefas, application: Applica
         }
     }
 
+    fun getTarefasCompleteOrIncomplete(complete: String){
+        CoroutineScope(Dispatchers.Main).launch {
+            val listTarefas = withContext(Dispatchers.Default) {
+                repository.getTarefasCompleteOrIncomplete(complete)
+            }
+            mListTarefa.value = listTarefas
+        }
+    }
+
     fun getDescription(name: String): Boolean {
         return repository.getDescription(name)
     }
@@ -42,6 +51,10 @@ class ViewModel (private val repository: RepositoryTarefas, application: Applica
 
     fun editTarefas(complete: String, descrip: String, nameNew: String, date: String, hora: String): Boolean {
         return repository.editTarefas(complete, descrip, nameNew, date, hora)
+    }
+
+    fun editTarefasComplete(completeCurrent: String, name: String): Boolean {
+        return repository.editTarefasComplete(completeCurrent, name)
     }
 
     fun deleteTarefas(descrip: String): Boolean {

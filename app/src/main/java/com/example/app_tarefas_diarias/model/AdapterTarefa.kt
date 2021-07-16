@@ -23,7 +23,7 @@ class AdapterTarefa(private val application: Application, private val listener: 
         val item = LayoutInflater.from(parent.context).inflate(
             R.layout.recycler_tarefas, parent, false)
 
-        val animation: Animation = AnimationUtils.loadAnimation( application, R.anim.zoom)
+        val animation: Animation = AnimationUtils.loadAnimation( application, R.anim.zoom_in)
         item.startAnimation(animation)
 
         return ViewHolderTarefa(item)
@@ -44,9 +44,19 @@ class AdapterTarefa(private val application: Application, private val listener: 
         init {
             itemView.edit_tarefa.setOnClickListener(this)
             itemView.delete_tarefa.setOnClickListener(this)
+            itemView.toolbar_tarefas.setOnClickListener(this)
+            itemView.complete_tarefa.setOnClickListener(this)
         }
 
         fun bind(tarefa: EntityTarefa){
+            if (tarefa.complete == "0") {
+                itemView.complete_tarefa.setImageResource(R.drawable.ic_todo)
+                itemView.complete_tarefa.tag = 0
+            }
+            else {
+                itemView.complete_tarefa.setImageResource(R.drawable.ic_completo)
+                itemView.complete_tarefa.tag = 1
+            }
             itemView.text_nome_tarefa.text = tarefa.description
             itemView.text_data_tarefa.text = tarefa.date
             itemView.text_hora_tarefa.text = tarefa.hora
@@ -61,13 +71,12 @@ class AdapterTarefa(private val application: Application, private val listener: 
     }
 
     fun updateTarefas(list: ArrayList<EntityTarefa>){
-        mListTarefa = list
-        notifyDataSetChanged()
-    }
-
-    fun updatePosition(position: Int){
-        mListTarefa.removeAt(position)
-        notifyItemRemoved(position)
-        notifyItemRangeChanged(position, mListTarefa.size)
+        if (list.size > 1) {
+            mListTarefa = list.reversed() as ArrayList<EntityTarefa>
+            notifyDataSetChanged()
+        }else {
+            mListTarefa = list
+            notifyDataSetChanged()
+        }
     }
 }

@@ -22,7 +22,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/radio_tarefa"
+        app:layout_constraintStart_toEndOf="@+id/complete_tarefa"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.270" />
 
@@ -93,14 +93,15 @@
         app:layout_constraintVertical_bias="0.0" />
 
 
-    <RadioButton
-        android:id="@+id/radio_tarefa"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="18dp"
-        android:buttonTint="@color/letras"
+    <ImageView
+        android:id="@+id/complete_tarefa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/ic_todo"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
