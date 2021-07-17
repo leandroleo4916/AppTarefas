@@ -12,13 +12,19 @@
         android:theme="@style/AppTheme"
         android:name="com.example.app_tarefas_diarias.koin.MyApp"
         tools:ignore="AllowBackup">
-        <activity android:name="com.example.app_tarefas_diarias.activitys.ActivityTarefa" >
+
+        <activity
+            android:name="com.example.app_tarefas_diarias.activitys.CollapsingActivity"
+            android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name="com.example.app_tarefas_diarias.activitys.ActivityTarefa" />
     </application>
 
 </manifest>

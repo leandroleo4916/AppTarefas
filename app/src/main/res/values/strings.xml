@@ -12,6 +12,8 @@
     <string name="deseja_sair">Deseja sair do App?</string>
     <string name="adicionado_sucesso">Adicionado com sucesso!</string>
     <string name="editado_sucesso">Editado com sucesso!</string>
+    <string name="completa">Tarefa completa!</string>
+    <string name="incompleta">Tarefa incompleta!</string>
     <string name="excluido_sucesso">Excluido com sucesso!</string>
     <string name="salvar">Salvar</string>
     <string name="nao_adicionado">Não foi possível adicionar!</string>

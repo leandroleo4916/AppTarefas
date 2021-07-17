@@ -41,21 +41,16 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
     override fun onItemClick(position: Int) {
 
-        val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
-
         recycler_tarefas[position].complete_tarefa.setOnClickListener {
+            val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
             val complete = recycler_tarefas[position].complete_tarefa.tag
-            if (complete == 1){
-                editTarefaComplete("0", name)
-            }
-            else{
-                editTarefaComplete("1", name)
-            }
+            if (complete == 1){ editTarefaComplete("0", name) }
+            else{ editTarefaComplete("1", name) }
         }
 
         recycler_tarefas[position].delete_tarefa.setOnClickListener {
             val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
-            deleteTarefa(name, position)
+            deleteTarefa(name)
         }
 
         recycler_tarefas[position].edit_tarefa.setOnClickListener {
@@ -162,7 +157,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
             // Captures current date
             val date = Calendar.getInstance().time
-            val dateTime = SimpleDateFormat("dd-MM-yyyy", Locale.ENGLISH)
+            val dateTime = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
             val dateCurrent = dateTime.format(date)
             dateText.text = dateCurrent.toString()
 
@@ -252,11 +247,15 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun editTarefaComplete(completeCurrent: String, name: String) {
+    private fun editTarefaComplete(complete: String, name: String) {
 
         when {
-            mViewModel.editTarefasComplete(completeCurrent, name) -> {
-                Toast.makeText(this, R.string.editado_sucesso, Toast.LENGTH_SHORT).show()
+            mViewModel.editTarefasComplete(complete, name) -> {
+                if (complete == "1"){
+                    Toast.makeText(this, R.string.completa, Toast.LENGTH_SHORT).show()
+                }
+                else {Toast.makeText(this, R.string.incompleta, Toast.LENGTH_SHORT).show()}
+
                 searchTarefa()
             }
             else -> {
@@ -265,7 +264,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun deleteTarefa(descrip: String, position: Int) {
+    private fun deleteTarefa(descrip: String) {
         when {
             mViewModel.deleteTarefas(descrip) -> {
                 Toast.makeText(this, R.string.excluido_sucesso, Toast.LENGTH_SHORT).show()
