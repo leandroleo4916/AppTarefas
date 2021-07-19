@@ -37,6 +37,25 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         searchTarefaInit()
         listener()
         observe()
+        captureDate()
+        captureHora()
+    }
+
+    private fun captureDate(): String{
+
+        val calendar = Calendar.getInstance().time
+        val dateTime = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+        val dateCurrent = dateTime.format(calendar)
+        date_toolbar.text = dateCurrent.toString()
+        return dateCurrent
+    }
+
+    private fun captureHora(): String{
+        val calendar = Calendar.getInstance().time
+        val hora = SimpleDateFormat("HH:mm", Locale.ENGLISH)
+        val hourCurrent = hora.format(calendar)
+        hora_toolbar.text = hourCurrent.toString()
+        return hourCurrent
     }
 
     override fun onItemClick(position: Int) {
@@ -89,17 +108,19 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     }
 
     private fun listener() {
-        image_filter_toolbar.setOnClickListener(this)
+        //image_filter_toolbar.setOnClickListener(this)
         float_bottom_tarefa.setOnClickListener(this)
+
     }
 
     override fun onClick(view: View?) {
         when (view) {
-            image_filter_toolbar -> dialogOption()
+            //image_filter_toolbar -> dialogOption()
             float_bottom_tarefa -> dialogAddTarefa("", "", "")
         }
     }
 
+    /*
     private fun dialogOption() {
         val menuOption = PopupMenu(this, image_filter_toolbar)
         menuOption.menuInflater.inflate(R.menu.popup, menuOption.menu)
@@ -115,6 +136,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
         menuOption.show()
     }
+     */
 
     private fun dialogAddTarefa(nameEdit: String, dateEdit: String, horaEdit: String) {
 
@@ -155,16 +177,11 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
         if (nameEdit == "") {
 
-            // Captures current date
-            val date = Calendar.getInstance().time
-            val dateTime = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
-            val dateCurrent = dateTime.format(date)
-            dateText.text = dateCurrent.toString()
+            val date = captureDate()
+            dateText.text = date
 
-            // Captures current hour
-            val hora = SimpleDateFormat("HH:mm", Locale.ENGLISH)
-            val hourCurrent = hora.format(date)
-            horaText.text = hourCurrent.toString()
+            val hora = captureHora()
+            horaText.text = hora
 
             val alertDialog = AlertDialog.Builder(this)
             alertDialog.setTitle(getString(R.string.Add_tarefa))
@@ -181,7 +198,10 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                         Toast.makeText(this, R.string.descricao_existe, Toast.LENGTH_SHORT).show()
                     }
                     else -> {
-                        saveTarefa("0", description, dateText.text.toString(), horaText.text.toString())
+                        saveTarefa("0",
+                            description,
+                            dateText.text.toString(),
+                            horaText.text.toString())
                     }
                 }
             }
@@ -234,7 +254,13 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun editTarefa(complete: String, descrip: String, nameEdit: String, date: String, hora: String, ) {
+    private fun editTarefa(
+        complete: String,
+        descrip: String,
+        nameEdit: String,
+        date: String,
+        hora: String
+    ) {
 
         when {
             mViewModel.editTarefas(complete, descrip, nameEdit, date, hora) -> {

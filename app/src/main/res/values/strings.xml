@@ -21,4 +21,6 @@
     <string name="nao_excluido">Não foi possível excluir!</string>
     <string name="tarefas_diarias">Tarefas Diárias</string>
     <string name="descricao_existe">Descrição já existe!</string>
+    <string name="_09_00">09:00</string>
+    <string name="seg_19_julho_2021">Seg, 19 Julho 2021</string>
 </resources>

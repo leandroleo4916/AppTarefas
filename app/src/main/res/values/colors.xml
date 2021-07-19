@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#2c2b3f</color>
+    <color name="colorPrimary">#e6e1e4</color>
     <color name="colorPrimaryDark">#2c2b3f</color>
     <color name="colorAccent">#2c2b3f</color>
-    <color name="back">#3A3950</color>
+    <color name="back">#e6e1e4</color>
     <color name="fundo">#35b5ad</color>
     <color name="fundoBlue">#2EA3D1</color>
     <color name="letras">#e6e1e4</color>
     <color name="letrashint">#BCB3B8</color>
-    <color name="corToolBar">#645c64</color>
+    <color name="corToolBar">#e6e1e4</color>
     <color name="textButtom">#7a69b0</color>
     <color name="backfrag">#434357</color>
     <color name="colorBlue">#3F51B5</color>

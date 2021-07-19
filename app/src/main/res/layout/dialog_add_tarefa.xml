@@ -23,7 +23,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
         android:hint="O que você vai fazer?"
-        android:textColorHint="@color/colorAccent"
+        android:textColorHint="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

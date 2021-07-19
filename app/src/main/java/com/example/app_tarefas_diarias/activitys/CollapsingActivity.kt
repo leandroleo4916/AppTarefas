@@ -10,7 +10,7 @@ import java.util.*
 class CollapsingActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_collapsing)
+        setContentView(R.layout.activity_tarefa)
 
 
 
