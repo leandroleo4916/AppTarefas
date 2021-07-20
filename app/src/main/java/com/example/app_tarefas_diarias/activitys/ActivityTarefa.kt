@@ -42,7 +42,6 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     }
 
     private fun captureDate(): String{
-
         val calendar = Calendar.getInstance().time
         val dateTime = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
         val dateCurrent = dateTime.format(calendar)
@@ -108,35 +107,43 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     }
 
     private fun listener() {
-        //image_filter_toolbar.setOnClickListener(this)
-        float_bottom_tarefa.setOnClickListener(this)
-
+        filter_tarefa.setOnClickListener(this)
+        add_tarefa.setOnClickListener(this)
+        option_tarefa.setOnClickListener(this)
     }
 
     override fun onClick(view: View?) {
         when (view) {
-            //image_filter_toolbar -> dialogOption()
-            float_bottom_tarefa -> dialogAddTarefa("", "", "")
+            option_tarefa -> dialogOption()
+            filter_tarefa -> dialogFilter()
+            add_tarefa -> dialogAddTarefa("", "", "")
         }
     }
 
-    /*
     private fun dialogOption() {
-        val menuOption = PopupMenu(this, image_filter_toolbar)
+        val menuOption = PopupMenu(this, option_tarefa)
+        menuOption.menuInflater.inflate(R.menu.menu, menuOption.menu)
+        menuOption.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.logout_app_menu -> finish() }
+            true
+        }
+        menuOption.show()
+    }
+
+    private fun dialogFilter() {
+        val menuOption = PopupMenu(this, filter_tarefa)
         menuOption.menuInflater.inflate(R.menu.popup, menuOption.menu)
-        menuOption.gravity
         menuOption.setOnMenuItemClickListener { item ->
             when (item.itemId){
                 R.id.todas -> searchTarefa()
                 R.id.completas -> mViewModel.getTarefasCompleteOrIncomplete("1")
                 R.id.incompletas -> mViewModel.getTarefasCompleteOrIncomplete("0")
-                R.id.sair -> finish()
             }
             true
         }
         menuOption.show()
     }
-     */
 
     private fun dialogAddTarefa(nameEdit: String, dateEdit: String, horaEdit: String) {
 
@@ -259,7 +266,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         descrip: String,
         nameEdit: String,
         date: String,
-        hora: String
+        hora: String,
     ) {
 
         when {
@@ -281,7 +288,6 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                     Toast.makeText(this, R.string.completa, Toast.LENGTH_SHORT).show()
                 }
                 else {Toast.makeText(this, R.string.incompleta, Toast.LENGTH_SHORT).show()}
-
                 searchTarefa()
             }
             else -> {

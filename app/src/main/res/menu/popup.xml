@@ -16,8 +16,4 @@
         android:id="@+id/incompletas"
         android:title="Incompletas" />
 
-    <item
-        android:id="@+id/sair"
-        android:title="Sair" />
-
 </menu>

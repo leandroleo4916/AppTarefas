@@ -7,9 +7,12 @@
     </style>
 
     <style name="expandedBarTextStyle" parent="AppTheme">
-        <item name="android:textSize">0sp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:searchIcon">@drawable/ic_option</item>
         <item name="android:textColor">@android:color/transparent</item>
 
     </style>
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>
