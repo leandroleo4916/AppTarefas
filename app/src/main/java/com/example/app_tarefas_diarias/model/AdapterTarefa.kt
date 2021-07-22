@@ -12,7 +12,6 @@ import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
 import com.example.app_tarefas_diarias.entity.EntityTarefa
 import kotlinx.android.synthetic.main.recycler_tarefas.view.*
 
-@Suppress("UNREACHABLE_CODE")
 class AdapterTarefa(private val application: Application, private val listener: OnItemClickListener
                     ): RecyclerView.Adapter<AdapterTarefa.ViewHolderTarefa>() {
 
@@ -39,7 +38,8 @@ class AdapterTarefa(private val application: Application, private val listener: 
         return mListTarefa.count()
     }
 
-    inner class ViewHolderTarefa(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
+    inner class ViewHolderTarefa(itemView: View) : RecyclerView.ViewHolder(itemView),
+        View.OnClickListener {
 
         init {
             itemView.edit_tarefa.setOnClickListener(this)
@@ -62,9 +62,9 @@ class AdapterTarefa(private val application: Application, private val listener: 
             itemView.text_hora_tarefa.text = tarefa.hora
         }
 
-        override fun onClick(v: View?) {
+        override fun onClick(view: View?) {
             val position = bindingAdapterPosition
-            when (v) {
+            when (view) {
                 itemView.edit_tarefa -> listener.onEditClick(position)
                 itemView.delete_tarefa -> listener.onDeleteClick(position)
                 itemView.complete_tarefa -> listener.onCompleteClick(position)

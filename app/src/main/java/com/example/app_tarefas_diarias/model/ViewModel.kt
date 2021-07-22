@@ -8,7 +8,8 @@ import com.example.app_tarefas_diarias.entity.EntityTarefa
 import com.example.app_tarefas_diarias.repository.RepositoryTarefas
 import kotlinx.coroutines.*
 
-class ViewModel (private val repository: RepositoryTarefas, application: Application): AndroidViewModel(application) {
+class ViewModel (private val repository: RepositoryTarefas, application: Application):
+    AndroidViewModel(application) {
 
     private val mListTarefa = MutableLiveData<ArrayList<EntityTarefa>>()
     val listTarefa: LiveData<ArrayList<EntityTarefa>> = mListTarefa
@@ -49,7 +50,8 @@ class ViewModel (private val repository: RepositoryTarefas, application: Applica
         return repository.setTarefas(complete, descrip, date, hora)
     }
 
-    fun editTarefas(complete: String, descrip: String, nameNew: String, date: String, hora: String): Boolean {
+    fun editTarefas(complete: String, descrip: String, nameNew: String, date: String,
+                    hora: String): Boolean {
         return repository.editTarefas(complete, descrip, nameNew, date, hora)
     }
 

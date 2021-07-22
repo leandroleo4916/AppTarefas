@@ -196,15 +196,15 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 val description = textTarefa.text.toString()
                 when {
                     description == "" -> {
-                        Toast.makeText(this, R.string.preencha, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.preencha,
+                            Toast.LENGTH_SHORT).show()
                     }
                     mViewModel.getDescription(description) -> {
-                        Toast.makeText(this, R.string.descricao_existe, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.descricao_existe,
+                            Toast.LENGTH_SHORT).show()
                     }
                     else -> {
-                        saveTarefa("0",
-                            description,
-                            dateText.text.toString(),
+                        saveTarefa("0", description, dateText.text.toString(),
                             horaText.text.toString())
                     }
                 }
@@ -228,10 +228,12 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 val description = textTarefa.text.toString()
                 when  {
                     description == "" -> {
-                        Toast.makeText(this, R.string.preencha, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.preencha,
+                            Toast.LENGTH_SHORT).show()
                     }
                     mViewModel.getDescription(description) -> {
-                        Toast.makeText(this, R.string.descricao_existe, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.descricao_existe,
+                            Toast.LENGTH_SHORT).show()
                     }
                     else -> editTarefa("0",
                         nameEdit,
@@ -251,14 +253,18 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
         when {
             mViewModel.setTarefas(complete, descrip, date, hora) -> {
-                Toast.makeText(this, R.string.adicionado_sucesso, Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, R.string.adicionado_sucesso,
+                    Toast.LENGTH_SHORT).show()
                 searchTarefa()
+                captureHora()
             }
-            else -> Toast.makeText(this, R.string.nao_adicionado, Toast.LENGTH_SHORT).show()
+            else -> Toast.makeText(this, R.string.nao_adicionado,
+                Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun editTarefa(complete: String, name: String, nameEdit: String, date: String, hora: String, ) {
+    private fun editTarefa(complete: String, name: String, nameEdit: String, date: String,
+                           hora: String, ) {
 
         when {
             mViewModel.editTarefas(complete, name, nameEdit, date, hora) -> {

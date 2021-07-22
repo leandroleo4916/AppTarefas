@@ -50,16 +50,16 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
 
                 if (cursor != null && cursor.count > 0) {
                     while (cursor.moveToNext()) {
-                        val id =
-                            cursor.getInt(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.ID))
-                        val complete =
-                            cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE))
-                        val description =
-                            cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION))
-                        val date =
-                            cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.DATE))
-                        val hora =
-                            cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.HORA))
+                        val id = cursor.getInt(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.ID))
+                        val complete = cursor.getString(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.COMPLETE))
+                        val description = cursor.getString(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION))
+                        val date = cursor.getString(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.DATE))
+                        val hora = cursor.getString(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.HORA))
 
                         tarefa.add(EntityTarefa(id, complete, description, date, hora))
                     }
@@ -95,11 +95,16 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
 
                 if (cursor != null && cursor.count > 0) {
                     while (cursor.moveToNext()) {
-                        val id = cursor.getInt(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.ID))
-                        val completo = cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE))
-                        val description = cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION))
-                        val date = cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.DATE))
-                        val hora = cursor.getString(cursor.getColumnIndex(ConstantsTarefa.TAREFA.COLUNAS.HORA))
+                        val id = cursor.getInt(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.ID))
+                        val completo = cursor.getString(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.COMPLETE))
+                        val description = cursor.getString(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION))
+                        val date = cursor.getString(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.DATE))
+                        val hora = cursor.getString(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.HORA))
 
                         tarefa.add(EntityTarefa(id, completo, description, date, hora))
                     }
@@ -111,7 +116,8 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
         }
     }
 
-    fun editTarefas(complete: String, descrip: String, nameNew: String, date: String, hora: String ): Boolean {
+    fun editTarefas(complete: String, descrip: String, nameNew: String, date: String,
+                    hora: String ): Boolean {
 
         return try {
             val db = mDataBase.writableDatabase

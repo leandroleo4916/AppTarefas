@@ -91,9 +91,7 @@
                 android:fitsSystemWindows="true"
                 app:contentInsetStartWithNavigation="0dp"
                 app:layout_collapseMode="parallax"
-                app:popupTheme="@style/AppTheme.PopupOverlay">
-
-            </androidx.appcompat.widget.Toolbar>
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
