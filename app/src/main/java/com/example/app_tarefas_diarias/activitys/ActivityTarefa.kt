@@ -258,16 +258,10 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun editTarefa(
-        complete: String,
-        descrip: String,
-        nameEdit: String,
-        date: String,
-        hora: String,
-    ) {
+    private fun editTarefa(complete: String, name: String, nameEdit: String, date: String, hora: String, ) {
 
         when {
-            mViewModel.editTarefas(complete, descrip, nameEdit, date, hora) -> {
+            mViewModel.editTarefas(complete, name, nameEdit, date, hora) -> {
                 Toast.makeText(this, R.string.editado_sucesso, Toast.LENGTH_SHORT).show()
                 searchTarefa()
                 captureHora()
