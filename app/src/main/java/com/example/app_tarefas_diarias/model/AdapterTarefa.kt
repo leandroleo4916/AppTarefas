@@ -64,8 +64,10 @@ class AdapterTarefa(private val application: Application, private val listener: 
 
         override fun onClick(v: View?) {
             val position = bindingAdapterPosition
-            if (position != RecyclerView.NO_POSITION) {
-                listener.onItemClick(position)
+            when (v) {
+                itemView.edit_tarefa -> listener.onEditClick(position)
+                itemView.delete_tarefa -> listener.onDeleteClick(position)
+                itemView.complete_tarefa -> listener.onCompleteClick(position)
             }
         }
     }

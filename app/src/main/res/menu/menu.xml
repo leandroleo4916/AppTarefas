@@ -6,9 +6,6 @@
 
     <item
         android:id="@+id/logout_app_menu"
-        android:orderInCategory="100"
-        android:icon="@drawable/ic_option"
-        app:showAsAction="always"
         android:title="Sair do App" />
 
 </menu>

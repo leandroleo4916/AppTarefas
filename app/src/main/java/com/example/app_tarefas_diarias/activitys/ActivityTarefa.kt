@@ -57,26 +57,23 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         return hourCurrent
     }
 
-    override fun onItemClick(position: Int) {
+    override fun onEditClick(position: Int) {
+        val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
+        val date = recycler_tarefas[position].text_data_tarefa.text.toString()
+        val hora = recycler_tarefas[position].text_hora_tarefa.text.toString()
+        dialogAddTarefa(name, date, hora)
+    }
 
-        recycler_tarefas[position].complete_tarefa.setOnClickListener {
-            val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
-            val complete = recycler_tarefas[position].complete_tarefa.tag
-            if (complete == 1){ editTarefaComplete("0", name) }
-            else{ editTarefaComplete("1", name) }
-        }
+    override fun onDeleteClick(position: Int) {
+        val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
+        deleteTarefa(name)
+    }
 
-        recycler_tarefas[position].delete_tarefa.setOnClickListener {
-            val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
-            deleteTarefa(name)
-        }
-
-        recycler_tarefas[position].edit_tarefa.setOnClickListener {
-            val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
-            val date = recycler_tarefas[position].text_data_tarefa.text.toString()
-            val hora = recycler_tarefas[position].text_hora_tarefa.text.toString()
-            dialogAddTarefa(name, date, hora)
-        }
+    override fun onCompleteClick(position: Int) {
+        val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
+        val complete = recycler_tarefas[position].complete_tarefa.tag
+        if (complete == 1){ editTarefaComplete("0", name) }
+        else{ editTarefaComplete("1", name) }
     }
 
     private fun searchTarefaInit() {
@@ -273,6 +270,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             mViewModel.editTarefas(complete, descrip, nameEdit, date, hora) -> {
                 Toast.makeText(this, R.string.editado_sucesso, Toast.LENGTH_SHORT).show()
                 searchTarefa()
+                captureHora()
             }
             else -> {
                 Toast.makeText(this, R.string.nao_editado, Toast.LENGTH_SHORT).show()
@@ -289,6 +287,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 }
                 else {Toast.makeText(this, R.string.incompleta, Toast.LENGTH_SHORT).show()}
                 searchTarefa()
+                captureHora()
             }
             else -> {
                 Toast.makeText(this, R.string.nao_editado, Toast.LENGTH_SHORT).show()
@@ -301,6 +300,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             mViewModel.deleteTarefas(descrip) -> {
                 Toast.makeText(this, R.string.excluido_sucesso, Toast.LENGTH_SHORT).show()
                 searchTarefa()
+                captureHora()
             }
             else -> {
                 Toast.makeText(this, R.string.nao_excluido, Toast.LENGTH_SHORT).show()
