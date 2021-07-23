@@ -1,11 +1,14 @@
 package com.example.app_tarefas_diarias.activitys
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.widget.*
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.get
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,6 +17,7 @@ import com.example.app_tarefas_diarias.R
 import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
 import com.example.app_tarefas_diarias.model.AdapterTarefa
 import com.example.app_tarefas_diarias.model.ViewModel
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_tarefa.*
 import kotlinx.android.synthetic.main.recycler_tarefas.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -22,8 +26,9 @@ import java.util.*
 
 class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickListener {
 
-    private lateinit var mAdapterTarefa: AdapterTarefa
-    private val mViewModel: ViewModel by viewModel()
+    private lateinit var adapterTarefa: AdapterTarefa
+    private val viewModel: ViewModel by viewModel()
+    private lateinit var coordinator: CoordinatorLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,8 +36,10 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
         val recycler = findViewById<RecyclerView>(R.id.recycler_tarefas)
         recycler.layoutManager = LinearLayoutManager(this)
-        mAdapterTarefa = AdapterTarefa(application, this)
-        recycler.adapter = mAdapterTarefa
+        adapterTarefa = AdapterTarefa(application, this)
+        recycler.adapter = adapterTarefa
+
+        coordinator = findViewById(R.id.container_tarefas)
 
         searchTarefaInit()
         listener()
@@ -77,24 +84,24 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     }
 
     private fun searchTarefaInit() {
-        mViewModel.getTarefasInit()
+        viewModel.getTarefasInit()
     }
 
     private fun searchTarefa() {
-        mViewModel.getTarefas()
+        viewModel.getTarefas()
     }
 
     private fun observe() {
-        mViewModel.listTarefa.observe(this, {
+        viewModel.listTarefa.observe(this, {
             when (it.size) {
                 0 -> {
-                    mAdapterTarefa.updateTarefas(it)
+                    adapterTarefa.updateTarefas(it)
                     progress_tarefa.visibility = View.GONE
                     text_preguica.visibility = View.VISIBLE
                     image_preguica.visibility = View.VISIBLE
                 }
                 else -> {
-                    mAdapterTarefa.updateTarefas(it)
+                    adapterTarefa.updateTarefas(it)
                     progress_tarefa.visibility = View.GONE
                     text_preguica.visibility = View.GONE
                     image_preguica.visibility = View.GONE
@@ -134,8 +141,8 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         menuOption.setOnMenuItemClickListener { item ->
             when (item.itemId){
                 R.id.todas -> searchTarefa()
-                R.id.completas -> mViewModel.getTarefasCompleteOrIncomplete("1")
-                R.id.incompletas -> mViewModel.getTarefasCompleteOrIncomplete("0")
+                R.id.completas -> viewModel.getTarefasCompleteOrIncomplete("1")
+                R.id.incompletas -> viewModel.getTarefasCompleteOrIncomplete("0")
             }
             true
         }
@@ -159,7 +166,8 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 data.set(Calendar.MONTH, month)
                 data.set(Calendar.YEAR, year)
 
-                SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH).format(data.time)
+                dateText.text = SimpleDateFormat(
+                    "dd/MM/yyyy", Locale.ENGLISH).format(data.time)
             }
             DatePickerDialog(this, dataTime, data.get(Calendar.YEAR),
                 data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH)).show()
@@ -174,8 +182,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
                 horaText.text = SimpleDateFormat("HH:mm", Locale.ENGLISH).format(cal.time)
             }
-            TimePickerDialog(
-                this, timeSetListener, cal.get(Calendar.HOUR_OF_DAY),
+            TimePickerDialog(this, timeSetListener, cal.get(Calendar.HOUR_OF_DAY),
                 cal.get(Calendar.MINUTE), true).show()
         }
 
@@ -196,12 +203,10 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 val description = textTarefa.text.toString()
                 when {
                     description == "" -> {
-                        Toast.makeText(this, R.string.preencha,
-                            Toast.LENGTH_SHORT).show()
+                        showSnackBar(R.string.preencha)
                     }
-                    mViewModel.getDescription(description) -> {
-                        Toast.makeText(this, R.string.descricao_existe,
-                            Toast.LENGTH_SHORT).show()
+                    viewModel.getDescription(description) -> {
+                        showSnackBar(R.string.descricao_existe)
                     }
                     else -> {
                         saveTarefa("0", description, dateText.text.toString(),
@@ -210,7 +215,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 }
             }
             alertDialog.setNegativeButton(getString(R.string.cancelar)) { _, _ ->
-                Toast.makeText(this, R.string.cancelado, Toast.LENGTH_SHORT).show()
+                showSnackBar(R.string.cancelado)
             }
             alertDialog.create().show()
 
@@ -227,13 +232,8 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
                 val description = textTarefa.text.toString()
                 when  {
-                    description == "" -> {
-                        Toast.makeText(this, R.string.preencha,
-                            Toast.LENGTH_SHORT).show()
-                    }
-                    mViewModel.getDescription(description) -> {
-                        Toast.makeText(this, R.string.descricao_existe,
-                            Toast.LENGTH_SHORT).show()
+                    description.isNotBlank() -> {
+                        showSnackBar(R.string.preencha)
                     }
                     else -> editTarefa("0",
                         nameEdit,
@@ -243,23 +243,22 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 }
             }
             alertDialog.setNegativeButton(getString(R.string.cancelar)) { _, _ ->
-                Toast.makeText(this, R.string.cancelado, Toast.LENGTH_SHORT).show()
+                showSnackBar(R.string.cancelado)
             }
             alertDialog.create().show()
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private fun saveTarefa(complete: String, descrip: String, date: String, hora: String) {
 
         when {
-            mViewModel.setTarefas(complete, descrip, date, hora) -> {
-                Toast.makeText(this, R.string.adicionado_sucesso,
-                    Toast.LENGTH_SHORT).show()
+            viewModel.setTarefas(complete, descrip, date, hora) -> {
+                showSnackBar(R.string.adicionado_sucesso)
                 searchTarefa()
                 captureHora()
             }
-            else -> Toast.makeText(this, R.string.nao_adicionado,
-                Toast.LENGTH_SHORT).show()
+            else -> showSnackBar(R.string.nao_adicionado)
         }
     }
 
@@ -267,13 +266,13 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                            hora: String, ) {
 
         when {
-            mViewModel.editTarefas(complete, name, nameEdit, date, hora) -> {
-                Toast.makeText(this, R.string.editado_sucesso, Toast.LENGTH_SHORT).show()
+            viewModel.editTarefas(complete, name, nameEdit, date, hora) -> {
+                showSnackBar(R.string.editado_sucesso)
                 searchTarefa()
                 captureHora()
             }
             else -> {
-                Toast.makeText(this, R.string.nao_editado, Toast.LENGTH_SHORT).show()
+                showSnackBar(R.string.nao_editado)
             }
         }
     }
@@ -281,30 +280,40 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     private fun editTarefaComplete(complete: String, name: String) {
 
         when {
-            mViewModel.editTarefasComplete(complete, name) -> {
+            viewModel.editTarefasComplete(complete, name) -> {
                 if (complete == "1"){
-                    Toast.makeText(this, R.string.completa, Toast.LENGTH_SHORT).show()
+                    showSnackBar(R.string.completa)
                 }
-                else {Toast.makeText(this, R.string.incompleta, Toast.LENGTH_SHORT).show()}
+                showSnackBar(R.string.incompleta)
                 searchTarefa()
                 captureHora()
             }
             else -> {
-                Toast.makeText(this, R.string.nao_editado, Toast.LENGTH_SHORT).show()
+                showSnackBar(R.string.nao_editado)
             }
         }
     }
 
     private fun deleteTarefa(descrip: String) {
         when {
-            mViewModel.deleteTarefas(descrip) -> {
-                Toast.makeText(this, R.string.excluido_sucesso, Toast.LENGTH_SHORT).show()
+            viewModel.deleteTarefas(descrip) -> {
+                showSnackBar(R.string.excluido_sucesso)
                 searchTarefa()
                 captureHora()
             }
             else -> {
-                Toast.makeText(this, R.string.nao_excluido, Toast.LENGTH_SHORT).show()
+                showSnackBar(R.string.nao_excluido)
             }
         }
+    }
+
+    private fun showSnackBar(message: Int) {
+        Snackbar.make(coordinator,
+            message, Snackbar.LENGTH_LONG)
+            .setTextColor(Color.WHITE)
+            .setActionTextColor(Color.WHITE)
+            .setBackgroundTint(Color.BLACK)
+            .setAction("Ok") {}
+            .show()
     }
 }

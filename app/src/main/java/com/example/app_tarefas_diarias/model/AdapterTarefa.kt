@@ -49,17 +49,19 @@ class AdapterTarefa(private val application: Application, private val listener: 
         }
 
         fun bind(tarefa: EntityTarefa){
+
+            itemView.text_nome_tarefa.text = tarefa.description
+            itemView.text_data_tarefa.text = tarefa.date
+            itemView.text_hora_tarefa.text = tarefa.hora
+
             if (tarefa.complete == "0") {
-                itemView.complete_tarefa.setImageResource(R.drawable.ic_todo)
+                itemView.complete_tarefa.setImageResource(R.drawable.ic_imcompleto)
                 itemView.complete_tarefa.tag = 0
             }
             else {
                 itemView.complete_tarefa.setImageResource(R.drawable.ic_completo)
                 itemView.complete_tarefa.tag = 1
             }
-            itemView.text_nome_tarefa.text = tarefa.description
-            itemView.text_data_tarefa.text = tarefa.date
-            itemView.text_hora_tarefa.text = tarefa.hora
         }
 
         override fun onClick(view: View?) {
