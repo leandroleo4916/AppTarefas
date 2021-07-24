@@ -19,6 +19,7 @@ import com.example.app_tarefas_diarias.model.AdapterTarefa
 import com.example.app_tarefas_diarias.model.ViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_tarefa.*
+import kotlinx.android.synthetic.main.dialog_add_tarefa.*
 import kotlinx.android.synthetic.main.recycler_tarefas.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -46,6 +47,20 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         observe()
         captureDate()
         captureHora()
+        updateDateHour()
+    }
+
+    private fun updateDateHour(){
+        val delay: Long = 100
+        val interval: Long = 60000
+        val timer = Timer()
+
+        timer.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                captureDate()
+                captureHora()
+            }
+        }, delay, interval)
     }
 
     private fun captureDate(): String{
@@ -190,7 +205,6 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
             val date = captureDate()
             dateText.text = date
-
             val hora = captureHora()
             horaText.text = hora
 
@@ -202,7 +216,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
                 val description = textTarefa.text.toString()
                 when {
-                    description == "" -> {
+                    description.isBlank() -> {
                         showSnackBar(R.string.preencha)
                     }
                     viewModel.getDescription(description) -> {
@@ -232,7 +246,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
                 val description = textTarefa.text.toString()
                 when  {
-                    description.isNotBlank() -> {
+                    description.isBlank() -> {
                         showSnackBar(R.string.preencha)
                     }
                     else -> editTarefa("0",
@@ -262,8 +276,10 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun editTarefa(complete: String, name: String, nameEdit: String, date: String,
-                           hora: String, ) {
+    private fun editTarefa(
+        complete: String, name: String, nameEdit: String, date: String,
+        hora: String,
+    ) {
 
         when {
             viewModel.editTarefas(complete, name, nameEdit, date, hora) -> {
@@ -284,7 +300,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 if (complete == "1"){
                     showSnackBar(R.string.completa)
                 }
-                showSnackBar(R.string.incompleta)
+                else showSnackBar(R.string.incompleta)
                 searchTarefa()
                 captureHora()
             }
