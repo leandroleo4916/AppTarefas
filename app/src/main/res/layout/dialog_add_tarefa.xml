@@ -22,12 +22,12 @@
         android:layout_width="300dp"
         android:layout_height="50dp"
         android:layout_marginTop="8dp"
-        android:hint="O que você vai fazer?"
+        android:hint="@string/o_que_voc_vai_fazer"
         android:textColorHint="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="Autofill,MissingConstraints,TextFields" />
 
     <TextView
         android:id="@+id/textView3"
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="Quando?"
+        android:text="@string/quando"
         app:layout_constraintEnd_toStartOf="@+id/toolbar5"
         app:layout_constraintTop_toBottomOf="@+id/text_tarefa"
         tools:ignore="MissingConstraints" />
@@ -45,8 +45,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:text="12/12/2021"
-        android:textSize="18dp"
+        android:text="@string/_12_12_2021"
+        android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/textView3"
@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="Horas?"
+        android:text="@string/horas"
         app:layout_constraintStart_toEndOf="@+id/toolbar5"
         app:layout_constraintTop_toBottomOf="@+id/text_tarefa"
         tools:ignore="MissingConstraints" />
@@ -68,7 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:text="18:00"
+        android:text="@string/_18_00"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textView4"

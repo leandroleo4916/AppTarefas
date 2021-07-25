@@ -1,6 +1,5 @@
 package com.example.app_tarefas_diarias.activitys
 
-import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
@@ -19,7 +18,6 @@ import com.example.app_tarefas_diarias.model.AdapterTarefa
 import com.example.app_tarefas_diarias.model.ViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_tarefa.*
-import kotlinx.android.synthetic.main.dialog_add_tarefa.*
 import kotlinx.android.synthetic.main.recycler_tarefas.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -219,8 +217,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                         showSnackBar(R.string.descricao_existe)
                     }
                     else -> {
-                        saveTarefa("0", description, dateText.text.toString(),
-                            horaText.text.toString())
+                        saveTarefa(description, dateText.text.toString(), horaText.text.toString())
                     }
                 }
             }
@@ -245,10 +242,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                     description.isBlank() -> {
                         showSnackBar(R.string.preencha)
                     }
-                    else -> editTarefa("0",
-                        nameEdit,
-                        description,
-                        dateText.text.toString(),
+                    else -> editTarefa(nameEdit, description, dateText.text.toString(),
                         horaText.text.toString())
                 }
             }
@@ -259,10 +253,10 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun saveTarefa(complete: String, descrip: String, date: String, hora: String) {
+    private fun saveTarefa(descrip: String, date: String, hora: String) {
 
         when {
-            viewModel.setTarefas(complete, descrip, date, hora) -> {
+            viewModel.setTarefas( "0", descrip, date, hora) -> {
                 showSnackBar(R.string.adicionado_sucesso)
                 searchTarefa()
             }
@@ -270,11 +264,10 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun editTarefa(complete: String, name: String, nameEdit: String, date: String,
-                           hora: String, ) {
+    private fun editTarefa(name: String, nameEdit: String, date: String, hora: String) {
 
         when {
-            viewModel.editTarefas(complete, name, nameEdit, date, hora) -> {
+            viewModel.editTarefas("0", name, nameEdit, date, hora) -> {
                 showSnackBar(R.string.editado_sucesso)
                 searchTarefa()
             }
