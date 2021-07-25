@@ -45,22 +45,18 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         searchTarefaInit()
         listener()
         observe()
-        captureDate()
-        captureHora()
         updateDateHour()
     }
 
     private fun updateDateHour(){
-        val delay: Long = 100
+        val delay: Long = 0
         val interval: Long = 60000
         val timer = Timer()
-
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 captureDate()
                 captureHora()
-            }
-        }, delay, interval)
+            } }, delay, interval)
     }
 
     private fun captureDate(): String{
@@ -263,29 +259,24 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    @SuppressLint("ResourceAsColor")
     private fun saveTarefa(complete: String, descrip: String, date: String, hora: String) {
 
         when {
             viewModel.setTarefas(complete, descrip, date, hora) -> {
                 showSnackBar(R.string.adicionado_sucesso)
                 searchTarefa()
-                captureHora()
             }
             else -> showSnackBar(R.string.nao_adicionado)
         }
     }
 
-    private fun editTarefa(
-        complete: String, name: String, nameEdit: String, date: String,
-        hora: String,
-    ) {
+    private fun editTarefa(complete: String, name: String, nameEdit: String, date: String,
+                           hora: String, ) {
 
         when {
             viewModel.editTarefas(complete, name, nameEdit, date, hora) -> {
                 showSnackBar(R.string.editado_sucesso)
                 searchTarefa()
-                captureHora()
             }
             else -> {
                 showSnackBar(R.string.nao_editado)
@@ -302,7 +293,6 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 }
                 else showSnackBar(R.string.incompleta)
                 searchTarefa()
-                captureHora()
             }
             else -> {
                 showSnackBar(R.string.nao_editado)
@@ -315,7 +305,6 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             viewModel.deleteTarefas(descrip) -> {
                 showSnackBar(R.string.excluido_sucesso)
                 searchTarefa()
-                captureHora()
             }
             else -> {
                 showSnackBar(R.string.nao_excluido)
