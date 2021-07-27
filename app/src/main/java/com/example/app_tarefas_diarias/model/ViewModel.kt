@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.app_tarefas_diarias.entity.EntityTarefa
+import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
 import com.example.app_tarefas_diarias.repository.RepositoryTarefas
 import kotlinx.coroutines.*
 
@@ -13,6 +14,9 @@ class ViewModel (private val repository: RepositoryTarefas, application: Applica
 
     private val mListTarefa = MutableLiveData<ArrayList<EntityTarefa>>()
     val listTarefa: LiveData<ArrayList<EntityTarefa>> = mListTarefa
+
+    private val mListTarefaDateAndHora = MutableLiveData<ArrayList<EntityTarefaDateAndHora>>()
+    val listTarefaDateAndHora: LiveData<ArrayList<EntityTarefaDateAndHora>> = mListTarefaDateAndHora
 
     fun getTarefasInit(){
         CoroutineScope(Dispatchers.Main).launch {
@@ -39,6 +43,15 @@ class ViewModel (private val repository: RepositoryTarefas, application: Applica
                 repository.getTarefasCompleteOrIncomplete(complete)
             }
             mListTarefa.value = listTarefas
+        }
+    }
+
+    fun getTarefasDateAndHora(complete: String){
+        CoroutineScope(Dispatchers.Main).launch {
+            val listTarefasDateAndHora = withContext(Dispatchers.Default) {
+                repository.getTarefasDateAndHora(complete)
+            }
+            mListTarefaDateAndHora.value = listTarefasDateAndHora
         }
     }
 

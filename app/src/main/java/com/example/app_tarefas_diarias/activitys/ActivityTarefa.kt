@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.app_tarefas_diarias.R
+import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
 import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
 import com.example.app_tarefas_diarias.model.AdapterTarefa
 import com.example.app_tarefas_diarias.model.ViewModel
@@ -21,7 +22,10 @@ import kotlinx.android.synthetic.main.activity_tarefa.*
 import kotlinx.android.synthetic.main.recycler_tarefas.view.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
+import java.time.Duration
+import java.time.LocalDateTime
 import java.util.*
+import kotlin.collections.ArrayList
 
 class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickListener {
 
@@ -44,6 +48,9 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         listener()
         observe()
         updateDateHour()
+
+        searchTarefaDateAndHora()
+        getDateAndHora()
     }
 
     private fun updateDateHour(){
@@ -54,7 +61,100 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             override fun run() {
                 captureDate()
                 captureHora()
+                searchTarefaDateAndHora()
             } }, delay, interval)
+    }
+
+    private fun getDateAndHora() {
+
+        viewModel.listTarefaDateAndHora.observe(this, {
+            when (it.size) {
+                0 -> { next_tarefa.text = "Nenhuma tarefa para os próximos dias"}
+                else -> calcularDateAndHora(it)
+            }
+        })
+    }
+
+    private fun calcularDateAndHora(it: ArrayList<EntityTarefaDateAndHora>) {
+
+        val dateCurrent = captureDate()
+        val dateS = dateCurrent.split("/")
+        val horaCurrent = captureHora()
+        val horaS = horaCurrent.split(":")
+        val result: ArrayList<Long> = arrayListOf()
+
+        for (i in it) {
+            val dSplit = i.date.split("/")
+            val hSplit = i.hora.split(":")
+
+            val dateHours = LocalDateTime.of(Integer.parseInt(dSplit[2]),
+                Integer.parseInt(dSplit[1]), Integer.parseInt(dSplit[0]),
+                Integer.parseInt(hSplit[0]), Integer.parseInt(hSplit[1]))
+
+            val current = LocalDateTime.of(Integer.parseInt(dateS[2]),
+                Integer.parseInt(dateS[1]), Integer.parseInt(dateS[0]),
+                Integer.parseInt(horaS[0]), Integer.parseInt(horaS[1]))
+
+            val duration = Duration.between(current, dateHours)
+            result.add(duration.toMinutes())
+        }
+
+        val minutes = result.minOrNull()
+        val minuteDay = 1440
+
+        when {
+            minutes!! <= 0 -> {
+                next_tarefa.text = "Você tem tarefas incomplestas de dias atrás"
+            }
+            minutes < minuteDay && minutes in 1..60 -> {
+                next_tarefa.text = "Próxima tarefa em $minutes minutos"
+            }
+            minutes in 61..minuteDay -> {
+                var min = minutes
+                var hour = 0
+                while (min > 60){
+                    min -= 60
+                    hour++
+                }
+                when (hour) {
+                    1 -> next_tarefa.text = "Próxima tarefa em $hour hora e $min minutos"
+                    else -> next_tarefa.text = "Próxima tarefa em $hour horas e $min minutos"
+                }
+            }
+            else -> {
+                var min = minutes
+                var day = 0
+
+                while (min > minuteDay) {
+                    min -= minuteDay
+                    day++
+                }
+
+                when {
+                    min > 60 -> {
+                        var minRest = min
+                        var hour = 0
+                        while (minRest > 60){
+                            minRest -= 60
+                            hour++
+                        }
+                        when (day) {
+                            1 -> {
+                                next_tarefa.text =
+                                    "Próxima tarefa em $day dia, $hour horas e $minRest minutos"
+                            }
+                            else -> {
+                                next_tarefa.text =
+                                    "Próxima tarefa em $day dias, $hour horas e $minRest minutos"
+                            }
+                        }
+                    }
+                    else -> {
+                        next_tarefa.text = "Próxima tarefa em $day dia e $min minutos"
+                    }
+                }
+            }
+        }
     }
 
     private fun captureDate(): String{
@@ -98,6 +198,10 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
     private fun searchTarefa() {
         viewModel.getTarefas()
+    }
+
+    private fun searchTarefaDateAndHora() {
+        viewModel.getTarefasDateAndHora("0")
     }
 
     private fun observe() {
@@ -259,6 +363,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             viewModel.setTarefas( "0", descrip, date, hora) -> {
                 showSnackBar(R.string.adicionado_sucesso)
                 searchTarefa()
+                searchTarefaDateAndHora()
             }
             else -> showSnackBar(R.string.nao_adicionado)
         }
@@ -270,6 +375,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             viewModel.editTarefas("0", name, nameEdit, date, hora) -> {
                 showSnackBar(R.string.editado_sucesso)
                 searchTarefa()
+                searchTarefaDateAndHora()
             }
             else -> {
                 showSnackBar(R.string.nao_editado)
@@ -286,6 +392,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 }
                 else showSnackBar(R.string.incompleta)
                 searchTarefa()
+                searchTarefaDateAndHora()
             }
             else -> {
                 showSnackBar(R.string.nao_editado)
@@ -298,6 +405,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             viewModel.deleteTarefas(descrip) -> {
                 showSnackBar(R.string.excluido_sucesso)
                 searchTarefa()
+                searchTarefaDateAndHora()
             }
             else -> {
                 showSnackBar(R.string.nao_excluido)

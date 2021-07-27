@@ -5,6 +5,7 @@ import android.database.Cursor
 import com.example.app_tarefas_diarias.constants.ConstantsTarefa
 import com.example.app_tarefas_diarias.database.DataBase
 import com.example.app_tarefas_diarias.entity.EntityTarefa
+import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -197,5 +198,44 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
             return false
         }
         return false
+    }
+
+    suspend fun getTarefasDateAndHora(complete: String): ArrayList<EntityTarefaDateAndHora> {
+
+        return withContext(Dispatchers.Default) {
+
+            val tarefa: ArrayList<EntityTarefaDateAndHora> = arrayListOf()
+            try {
+                val cursor: Cursor
+                val db = mDataBase.readableDatabase
+
+                val projection = arrayOf(
+                    ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION,
+                    ConstantsTarefa.TAREFA.COLUNAS.DATE,
+                    ConstantsTarefa.TAREFA.COLUNAS.HORA
+                )
+                val selection = ConstantsTarefa.TAREFA.COLUNAS.COMPLETE + " = ?"
+                val args = arrayOf(complete)
+
+                cursor = db.query(ConstantsTarefa.TAREFA.TABLE_NAME, projection, selection,
+                    args, null, null, null)
+
+                if (cursor != null && cursor.count > 0) {
+                    while (cursor.moveToNext()) {
+                        val description = cursor.getString(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION))
+                        val date = cursor.getString(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.DATE))
+                        val hora = cursor.getString(cursor.getColumnIndex(
+                            ConstantsTarefa.TAREFA.COLUNAS.HORA))
+
+                        tarefa.add(EntityTarefaDateAndHora(description, date, hora))
+                    }
+                }
+                cursor?.close()
+            } catch (e: Exception) {
+            }
+            tarefa
+        }
     }
 }

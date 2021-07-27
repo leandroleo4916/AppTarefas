@@ -28,10 +28,20 @@
                 android:paddingHorizontal="20dp">
 
                 <TextView
+                    android:id="@+id/next_tarefa"
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:layout_marginTop="30dp"
+                    android:text="Nenhuma tarefa"
+                    android:textAlignment="center"
+                    android:singleLine="false"
+                    android:textColor="@android:color/white"
+                    android:textSize="25sp" />
+
+                <TextView
                     android:id="@+id/hora_toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="75dp"
-                    android:layout_marginTop="100dp"
                     android:text="@string/_09_00"
                     android:textAlignment="center"
                     android:textColor="@android:color/white"
