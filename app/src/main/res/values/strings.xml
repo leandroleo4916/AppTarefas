@@ -28,4 +28,6 @@
     <string name="_12_12_2021">12/12/2021</string>
     <string name="horas">Horas?</string>
     <string name="_18_00">18:00</string>
+    <string name="tarefas_dias_atras">Você tem tarefas incomplestas de dias atrás</string>
+    <string name="Nenhuma_tarefa_prox_dias">Nenhuma tarefa para os próximos dias</string>
 </resources>

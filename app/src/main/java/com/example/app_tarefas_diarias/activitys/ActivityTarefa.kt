@@ -69,7 +69,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
         viewModel.listTarefaDateAndHora.observe(this, {
             when (it.size) {
-                0 -> { next_tarefa.text = "Nenhuma tarefa para os próximos dias"}
+                0 -> { next_tarefa.text = getString(R.string.Nenhuma_tarefa_prox_dias)}
                 else -> calcularDateAndHora(it)
             }
         })
@@ -104,7 +104,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
         when {
             minutes!! <= 0 -> {
-                next_tarefa.text = "Você tem tarefas incomplestas de dias atrás"
+                next_tarefa.text = getString(R.string.tarefas_dias_atras)
             }
             minutes < minuteDay && minutes in 1..60 -> {
                 next_tarefa.text = "Próxima tarefa em $minutes minutos"
