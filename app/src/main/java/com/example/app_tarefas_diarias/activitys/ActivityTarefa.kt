@@ -104,7 +104,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
         when {
             minutes!! <= 0 -> {
-                next_tarefa.text = getString(R.string.tarefas_dias_atras)
+                next_tarefa.text = getString(R.string.tarefas_atras)
             }
             minutes < minuteDay && minutes in 1..60 -> {
                 next_tarefa.text = "Próxima tarefa em $minutes minutos"
