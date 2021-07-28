@@ -25,7 +25,6 @@ import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.collections.ArrayList
 
 class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickListener {
 
@@ -44,12 +43,10 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
         coordinator = findViewById(R.id.container_tarefas)
 
-        searchTarefaInit()
         listener()
+        searchTarefaInit()
         observe()
         updateDateHour()
-
-        searchTarefaDateAndHora()
         getDateAndHora()
     }
 
@@ -60,7 +57,6 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 captureDate()
-                captureHora()
                 searchTarefaDateAndHora()
             } }, delay, interval)
     }
@@ -69,7 +65,9 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
         viewModel.listTarefaDateAndHora.observe(this, {
             when (it.size) {
-                0 -> { next_tarefa.text = getString(R.string.Nenhuma_tarefa_prox_dias)}
+                0 -> {
+                    next_tarefa.text = getString(R.string.Nenhuma_tarefa_prox_dias)
+                }
                 else -> calcularDateAndHora(it)
             }
         })
@@ -77,9 +75,9 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
     private fun calcularDateAndHora(it: ArrayList<EntityTarefaDateAndHora>) {
 
-        val dateCurrent = captureDate()
+        val dateCurrent = returnDate()
         val dateS = dateCurrent.split("/")
-        val horaCurrent = captureHora()
+        val horaCurrent = returnHora()
         val horaS = horaCurrent.split(":")
         val result: ArrayList<Long> = arrayListOf()
 
@@ -157,20 +155,27 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun captureDate(): String{
+    private fun captureDate(){
         val calendar = Calendar.getInstance().time
-        val dateTime = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
-        val dateCurrent = dateTime.format(calendar)
+        val local = Locale("pt", "BR")
+        val date = SimpleDateFormat("E dd 'de' MMMM 'de' yyyy", local)
+        val hora = SimpleDateFormat("HH:mm", Locale.ENGLISH)
+        val dateCurrent = date.format(calendar)
+        val hourCurrent = hora.format(calendar)
         date_toolbar.text = dateCurrent.toString()
-        return dateCurrent
+        hora_toolbar.text = hourCurrent.toString()
     }
 
-    private fun captureHora(): String{
+    private fun returnDate(): String{
+        val calendar = Calendar.getInstance().time
+        val date = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+        return date.format(calendar)
+    }
+
+    private fun returnHora(): String{
         val calendar = Calendar.getInstance().time
         val hora = SimpleDateFormat("HH:mm", Locale.ENGLISH)
-        val hourCurrent = hora.format(calendar)
-        hora_toolbar.text = hourCurrent.toString()
-        return hourCurrent
+        return hora.format(calendar)
     }
 
     override fun onEditClick(position: Int) {
@@ -301,9 +306,9 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
         if (nameEdit == "") {
 
-            val date = captureDate()
+            val date = returnDate()
             dateText.text = date
-            val hora = captureHora()
+            val hora = returnHora()
             horaText.text = hora
 
             val alertDialog = AlertDialog.Builder(this)
@@ -360,7 +365,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     private fun saveTarefa(descrip: String, date: String, hora: String) {
 
         when {
-            viewModel.setTarefas( "0", descrip, date, hora) -> {
+            viewModel.setTarefas("0", descrip, date, hora) -> {
                 showSnackBar(R.string.adicionado_sucesso)
                 searchTarefa()
                 searchTarefaDateAndHora()

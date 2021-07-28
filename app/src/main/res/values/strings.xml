@@ -22,7 +22,7 @@
     <string name="tarefas_diarias">Tarefas Diárias</string>
     <string name="descricao_existe">Descrição já existe!</string>
     <string name="_09_00">09:00</string>
-    <string name="seg_19_julho_2021">Seg, 19 Julho 2021</string>
+    <string name="seg_19_julho_2021">19 Julho 2021</string>
     <string name="o_que_voc_vai_fazer">O que você vai fazer?</string>
     <string name="quando">Quando?</string>
     <string name="_12_12_2021">12/12/2021</string>
@@ -30,4 +30,5 @@
     <string name="_18_00">18:00</string>
     <string name="tarefas_atras">Você tem tarefas incomplestas anterior a esta data!</string>
     <string name="Nenhuma_tarefa_prox_dias">Nenhuma tarefa para os próximos dias</string>
+    <string name="previsao_de_tarefa">Previsão de tarefa</string>
 </resources>

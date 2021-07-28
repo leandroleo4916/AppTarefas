@@ -20,7 +20,7 @@ class ViewModel (private val repository: RepositoryTarefas, application: Applica
 
     fun getTarefasInit(){
         CoroutineScope(Dispatchers.Main).launch {
-            delay(1500)
+            delay(1000)
             val listTarefas = withContext(Dispatchers.Default) {
                     repository.getTarefas()
                 }

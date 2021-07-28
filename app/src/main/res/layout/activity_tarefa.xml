@@ -32,7 +32,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="30dp"
-                    android:text="Nenhuma tarefa"
+                    android:text="@string/previsao_de_tarefa"
                     android:textAlignment="center"
                     android:singleLine="false"
                     android:textColor="@android:color/white"
@@ -41,11 +41,11 @@
                 <TextView
                     android:id="@+id/hora_toolbar"
                     android:layout_width="match_parent"
-                    android:layout_height="75dp"
+                    android:layout_height="70dp"
                     android:text="@string/_09_00"
                     android:textAlignment="center"
                     android:textColor="@android:color/white"
-                    android:textSize="60sp" />
+                    android:textSize="50sp" />
 
                 <TextView
                     android:id="@+id/date_toolbar"
@@ -54,7 +54,7 @@
                     android:textAlignment="center"
                     android:text="@string/seg_19_julho_2021"
                     android:textColor="@color/letras"
-                    android:textSize="16sp" />
+                    android:textSize="15sp" />
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar_tarefa"
