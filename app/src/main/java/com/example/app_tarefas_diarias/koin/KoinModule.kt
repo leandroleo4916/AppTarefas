@@ -1,7 +1,7 @@
 package com.example.app_tarefas_diarias.koin
 
 import com.example.app_tarefas_diarias.database.DataBase
-import com.example.app_tarefas_diarias.model.ViewModel
+import com.example.app_tarefas_diarias.model.TarefasViewModel
 import com.example.app_tarefas_diarias.repository.RepositoryTarefas
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -15,7 +15,7 @@ val repositoryModule = module {
 }
 
 val viewModelModule = module {
-    viewModel { ViewModel(get(), get()) }
+    viewModel { TarefasViewModel(get()) }
 }
 
 val appModules = listOf(

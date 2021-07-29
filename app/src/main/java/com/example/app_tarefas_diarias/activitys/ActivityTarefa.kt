@@ -16,7 +16,7 @@ import com.example.app_tarefas_diarias.R
 import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
 import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
 import com.example.app_tarefas_diarias.model.AdapterTarefa
-import com.example.app_tarefas_diarias.model.ViewModel
+import com.example.app_tarefas_diarias.model.TarefasViewModel
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_tarefa.*
 import kotlinx.android.synthetic.main.recycler_tarefas.view.*
@@ -29,7 +29,7 @@ import java.util.*
 class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickListener {
 
     private lateinit var adapterTarefa: AdapterTarefa
-    private val viewModel: ViewModel by viewModel()
+    private val tarefasViewModel: TarefasViewModel by viewModel()
     private lateinit var coordinator: CoordinatorLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +63,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
     private fun getDateAndHora() {
 
-        viewModel.listTarefaDateAndHora.observe(this, {
+        tarefasViewModel.listTarefaDateAndHora.observe(this, {
             when (it.size) {
                 0 -> {
                     next_tarefa.text = getString(R.string.Nenhuma_tarefa_prox_dias)
@@ -158,12 +158,9 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     private fun captureDate(){
         val calendar = Calendar.getInstance().time
         val local = Locale("pt", "BR")
-        val date = SimpleDateFormat("E dd 'de' MMMM 'de' yyyy", local)
-        val hora = SimpleDateFormat("HH:mm", Locale.ENGLISH)
-        val dateCurrent = date.format(calendar)
-        val hourCurrent = hora.format(calendar)
-        date_toolbar.text = dateCurrent.toString()
-        hora_toolbar.text = hourCurrent.toString()
+        val date = SimpleDateFormat("E dd 'de' MMMM 'de' yyyy, HH:mm", local)
+        val hourCurrent = date.format(calendar)
+        date_toolbar.text = hourCurrent.toString()
     }
 
     private fun returnDate(): String{
@@ -198,19 +195,19 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     }
 
     private fun searchTarefaInit() {
-        viewModel.getTarefasInit()
+        tarefasViewModel.getTarefasInit()
     }
 
     private fun searchTarefa() {
-        viewModel.getTarefas()
+        tarefasViewModel.getTarefas()
     }
 
     private fun searchTarefaDateAndHora() {
-        viewModel.getTarefasDateAndHora("0")
+        tarefasViewModel.getTarefasDateAndHora("0")
     }
 
     private fun observe() {
-        viewModel.listTarefa.observe(this, {
+        tarefasViewModel.listTarefa.observe(this, {
             when (it.size) {
                 0 -> {
                     adapterTarefa.updateTarefas(it)
@@ -259,8 +256,8 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         menuOption.setOnMenuItemClickListener { item ->
             when (item.itemId){
                 R.id.todas -> searchTarefa()
-                R.id.completas -> viewModel.getTarefasCompleteOrIncomplete("1")
-                R.id.incompletas -> viewModel.getTarefasCompleteOrIncomplete("0")
+                R.id.completas -> tarefasViewModel.getTarefasCompleteOrIncomplete("1")
+                R.id.incompletas -> tarefasViewModel.getTarefasCompleteOrIncomplete("0")
             }
             true
         }
@@ -322,7 +319,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                     description.isBlank() -> {
                         showSnackBar(R.string.preencha)
                     }
-                    viewModel.getDescription(description) -> {
+                    tarefasViewModel.getDescription(description) -> {
                         showSnackBar(R.string.descricao_existe)
                     }
                     else -> {
@@ -365,7 +362,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     private fun saveTarefa(descrip: String, date: String, hora: String) {
 
         when {
-            viewModel.setTarefas("0", descrip, date, hora) -> {
+            tarefasViewModel.setTarefas("0", descrip, date, hora) -> {
                 showSnackBar(R.string.adicionado_sucesso)
                 searchTarefa()
                 searchTarefaDateAndHora()
@@ -377,7 +374,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     private fun editTarefa(name: String, nameEdit: String, date: String, hora: String) {
 
         when {
-            viewModel.editTarefas("0", name, nameEdit, date, hora) -> {
+            tarefasViewModel.editTarefas("0", name, nameEdit, date, hora) -> {
                 showSnackBar(R.string.editado_sucesso)
                 searchTarefa()
                 searchTarefaDateAndHora()
@@ -391,7 +388,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     private fun editTarefaComplete(complete: String, name: String) {
 
         when {
-            viewModel.editTarefasComplete(complete, name) -> {
+            tarefasViewModel.editTarefasComplete(complete, name) -> {
                 if (complete == "1"){
                     showSnackBar(R.string.completa)
                 }
@@ -407,7 +404,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
     private fun deleteTarefa(descrip: String) {
         when {
-            viewModel.deleteTarefas(descrip) -> {
+            tarefasViewModel.deleteTarefas(descrip) -> {
                 showSnackBar(R.string.excluido_sucesso)
                 searchTarefa()
                 searchTarefaDateAndHora()

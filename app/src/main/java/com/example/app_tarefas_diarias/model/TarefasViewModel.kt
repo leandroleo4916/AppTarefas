@@ -1,19 +1,17 @@
 package com.example.app_tarefas_diarias.model
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.example.app_tarefas_diarias.entity.EntityTarefa
 import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
 import com.example.app_tarefas_diarias.repository.RepositoryTarefas
 import kotlinx.coroutines.*
 
-class ViewModel (private val repository: RepositoryTarefas, application: Application):
-    AndroidViewModel(application) {
+class TarefasViewModel (private val repository: RepositoryTarefas): ViewModel() {
 
-    private val mListTarefa = MutableLiveData<ArrayList<EntityTarefa>>()
-    val listTarefa: LiveData<ArrayList<EntityTarefa>> = mListTarefa
+    private val vListTarefa = MutableLiveData<ArrayList<EntityTarefa>>()
+    val listTarefa: LiveData<ArrayList<EntityTarefa>> = vListTarefa
 
     private val mListTarefaDateAndHora = MutableLiveData<ArrayList<EntityTarefaDateAndHora>>()
     val listTarefaDateAndHora: LiveData<ArrayList<EntityTarefaDateAndHora>> = mListTarefaDateAndHora
@@ -24,7 +22,7 @@ class ViewModel (private val repository: RepositoryTarefas, application: Applica
             val listTarefas = withContext(Dispatchers.Default) {
                     repository.getTarefas()
                 }
-            mListTarefa.value = listTarefas
+            vListTarefa.value = listTarefas
         }
     }
 
@@ -33,7 +31,7 @@ class ViewModel (private val repository: RepositoryTarefas, application: Applica
             val listTarefas = withContext(Dispatchers.Default) {
                 repository.getTarefas()
             }
-            mListTarefa.value = listTarefas
+            vListTarefa.value = listTarefas
         }
     }
 
@@ -42,7 +40,7 @@ class ViewModel (private val repository: RepositoryTarefas, application: Applica
             val listTarefas = withContext(Dispatchers.Default) {
                 repository.getTarefasCompleteOrIncomplete(complete)
             }
-            mListTarefa.value = listTarefas
+            vListTarefa.value = listTarefas
         }
     }
 

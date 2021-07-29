@@ -9,12 +9,12 @@ import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-class RepositoryTarefas(private val mDataBase: DataBase) {
+class RepositoryTarefas(private val dataBase: DataBase) {
 
     fun setTarefas(complete: String, descrip: String, date: String, hora: String): Boolean {
 
         return try {
-            val db = mDataBase.writableDatabase
+            val db = dataBase.writableDatabase
             val insertValues = ContentValues()
             insertValues.put(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE, complete)
             insertValues.put(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION, descrip)
@@ -36,7 +36,7 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
             val tarefa: ArrayList<EntityTarefa> = arrayListOf()
             try {
                 val cursor: Cursor
-                val db = mDataBase.readableDatabase
+                val db = dataBase.readableDatabase
 
                 val projection = arrayOf(
                     ConstantsTarefa.TAREFA.COLUNAS.ID,
@@ -79,7 +79,7 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
             val tarefa: ArrayList<EntityTarefa> = arrayListOf()
             try {
                 val cursor: Cursor
-                val db = mDataBase.readableDatabase
+                val db = dataBase.readableDatabase
 
                 val projection = arrayOf(
                     ConstantsTarefa.TAREFA.COLUNAS.ID,
@@ -121,7 +121,7 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
                     hora: String ): Boolean {
 
         return try {
-            val db = mDataBase.writableDatabase
+            val db = dataBase.writableDatabase
 
             val contentValues = ContentValues()
             contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE, complete)
@@ -144,7 +144,7 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
     fun editTarefasComplete(completeCurrent: String, name: String): Boolean {
 
         return try {
-            val db = mDataBase.writableDatabase
+            val db = dataBase.writableDatabase
 
             val contentValues = ContentValues()
             contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE, completeCurrent)
@@ -163,7 +163,7 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
     fun deleteTarefas(descrip: String): Boolean {
 
         return try {
-            val db = mDataBase.writableDatabase
+            val db = dataBase.writableDatabase
             val selection = ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION + " = ?"
             val args = arrayOf(descrip)
 
@@ -179,7 +179,7 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
 
         try {
             val cursor: Cursor
-            val db = mDataBase.readableDatabase
+            val db = dataBase.readableDatabase
 
             val projection = arrayOf(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION)
             val selection = ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION + " = ?"
@@ -207,10 +207,9 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
             val tarefa: ArrayList<EntityTarefaDateAndHora> = arrayListOf()
             try {
                 val cursor: Cursor
-                val db = mDataBase.readableDatabase
+                val db = dataBase.readableDatabase
 
                 val projection = arrayOf(
-                    ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION,
                     ConstantsTarefa.TAREFA.COLUNAS.DATE,
                     ConstantsTarefa.TAREFA.COLUNAS.HORA
                 )
@@ -222,14 +221,12 @@ class RepositoryTarefas(private val mDataBase: DataBase) {
 
                 if (cursor != null && cursor.count > 0) {
                     while (cursor.moveToNext()) {
-                        val description = cursor.getString(cursor.getColumnIndex(
-                            ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION))
                         val date = cursor.getString(cursor.getColumnIndex(
                             ConstantsTarefa.TAREFA.COLUNAS.DATE))
                         val hora = cursor.getString(cursor.getColumnIndex(
                             ConstantsTarefa.TAREFA.COLUNAS.HORA))
 
-                        tarefa.add(EntityTarefaDateAndHora(description, date, hora))
+                        tarefa.add(EntityTarefaDateAndHora(date, hora))
                     }
                 }
                 cursor?.close()

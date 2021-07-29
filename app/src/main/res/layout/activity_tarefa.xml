@@ -31,21 +31,12 @@
                     android:id="@+id/next_tarefa"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="30dp"
-                    android:text="@string/previsao_de_tarefa"
+                    android:layout_marginTop="70dp"
+                    android:text="@string/Nenhuma_tarefa_prox_dias"
                     android:textAlignment="center"
                     android:singleLine="false"
                     android:textColor="@android:color/white"
-                    android:textSize="25sp" />
-
-                <TextView
-                    android:id="@+id/hora_toolbar"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:text="@string/_09_00"
-                    android:textAlignment="center"
-                    android:textColor="@android:color/white"
-                    android:textSize="50sp" />
+                    android:textSize="30sp" />
 
                 <TextView
                     android:id="@+id/date_toolbar"
