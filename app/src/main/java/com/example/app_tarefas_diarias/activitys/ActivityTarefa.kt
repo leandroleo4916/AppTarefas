@@ -6,6 +6,7 @@ import android.app.TimePickerDialog
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AlphaAnimation
 import android.widget.*
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.view.get
@@ -17,6 +18,7 @@ import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
 import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
 import com.example.app_tarefas_diarias.model.AdapterTarefa
 import com.example.app_tarefas_diarias.model.TarefasViewModel
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_tarefa.*
 import kotlinx.android.synthetic.main.recycler_tarefas.view.*
@@ -25,12 +27,20 @@ import java.text.SimpleDateFormat
 import java.time.Duration
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.math.abs
 
-class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickListener {
+class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickListener,
+    AppBarLayout.OnOffsetChangedListener {
 
     private lateinit var adapterTarefa: AdapterTarefa
     private val tarefasViewModel: TarefasViewModel by viewModel()
     private lateinit var coordinator: CoordinatorLayout
+
+    private val showTitleToolBar = 0.9f
+    private val animationDuration = 200
+    private var titleVisible = false
+    private var title: TextView? = null
+    private var appBarLayout: AppBarLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,13 +51,21 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         adapterTarefa = AdapterTarefa(application, this)
         recycler.adapter = adapterTarefa
 
-        coordinator = findViewById(R.id.container_tarefas)
+        instanceView()
 
         listener()
         searchTarefaInit()
         observe()
         updateDateHour()
         getDateAndHora()
+    }
+
+    private fun instanceView(){
+        coordinator = findViewById(R.id.container_tarefas)
+        appBarLayout = findViewById(R.id.appbar)
+        title = findViewById(R.id.text_title)
+        startAlphaAnimation(title!!, 0, View.INVISIBLE)
+        appBarLayout!!.addOnOffsetChangedListener(this)
     }
 
     private fun updateDateHour(){
@@ -423,5 +441,34 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             .setBackgroundTint(Color.BLACK)
             .setAction("Ok") {}
             .show()
+    }
+
+    override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+        val maxScroll = appBarLayout!!.totalScrollRange
+        val percentage = abs(verticalOffset).toFloat() / maxScroll.toFloat()
+
+        handleToolbarTitleVisibility(percentage)
+    }
+
+    private fun handleToolbarTitleVisibility(percentage: Float) {
+        if (percentage >= showTitleToolBar) {
+            if (!titleVisible) {
+                startAlphaAnimation(title!!, animationDuration.toLong(), View.VISIBLE)
+                titleVisible = true
+            }
+        } else {
+            if (titleVisible) {
+                startAlphaAnimation(title!!, animationDuration.toLong(), View.INVISIBLE)
+                titleVisible = false
+            }
+        }
+    }
+
+    private fun startAlphaAnimation(v: View, duration: Long, visibility: Int) {
+        val alphaAnimation = if (visibility == View.VISIBLE) AlphaAnimation(0f, 1f)
+                            else AlphaAnimation(1f, 0f)
+        alphaAnimation.duration = duration
+        alphaAnimation.fillAfter = true
+        v.startAnimation(alphaAnimation)
     }
 }

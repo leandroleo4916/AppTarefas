@@ -22,7 +22,7 @@ class AdapterTarefa(private val application: Application, private val listener: 
         val item = LayoutInflater.from(parent.context).inflate(
             R.layout.recycler_tarefas, parent, false)
 
-        val animation: Animation = AnimationUtils.loadAnimation( application, R.anim.zoom_in)
+        val animation: Animation = AnimationUtils.loadAnimation( application, R.anim.show)
         item.startAnimation(animation)
 
         return ViewHolderTarefa(item)
