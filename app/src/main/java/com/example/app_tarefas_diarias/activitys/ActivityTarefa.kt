@@ -83,9 +83,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
         tarefasViewModel.listTarefaDateAndHora.observe(this, {
             when (it.size) {
-                0 -> {
-                    next_tarefa.text = getString(R.string.Nenhuma_tarefa_prox_dias)
-                }
+                0 -> { next_tarefa.text = getString(R.string.Nenhuma_tarefa_prox_dias) }
                 else -> calcularDateAndHora(it)
             }
         })
