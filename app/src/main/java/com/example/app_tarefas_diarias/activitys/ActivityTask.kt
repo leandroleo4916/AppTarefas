@@ -14,6 +14,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.app_tarefas_diarias.R
+import com.example.app_tarefas_diarias.entity.EditTask
+import com.example.app_tarefas_diarias.entity.EntityTask
 import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
 import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
 import com.example.app_tarefas_diarias.model.AdapterTarefa
@@ -29,17 +31,16 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.math.abs
 
-class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickListener,
+class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListener,
     AppBarLayout.OnOffsetChangedListener {
 
-    private lateinit var adapterTarefa: AdapterTarefa
-    private val tarefasViewModel: TarefasViewModel by viewModel()
+    private lateinit var adapterTask: AdapterTarefa
+    private val taskViewModel: TarefasViewModel by viewModel()
     private lateinit var coordinator: CoordinatorLayout
-
     private val showTitleToolBar = 0.9f
     private val animationDuration = 200
     private var titleVisible = false
-    private var title: TextView? = null
+    private var textTitle: TextView? = null
     private var appBarLayout: AppBarLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,13 +49,14 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
 
         val recycler = findViewById<RecyclerView>(R.id.recycler_tarefas)
         recycler.layoutManager = LinearLayoutManager(this)
-        adapterTarefa = AdapterTarefa(application, this)
-        recycler.adapter = adapterTarefa
+        adapterTask = AdapterTarefa(application, this)
+        recycler.adapter = adapterTask
 
         instanceView()
+        startAlphaAnimation(textTitle!!, 0, View.INVISIBLE)
 
         listener()
-        searchTarefaInit()
+        searchTaskInit()
         observe()
         updateDateHour()
         getDateAndHora()
@@ -63,8 +65,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     private fun instanceView(){
         coordinator = findViewById(R.id.container_tarefas)
         appBarLayout = findViewById(R.id.appbar)
-        title = findViewById(R.id.text_title)
-        startAlphaAnimation(title!!, 0, View.INVISIBLE)
+        textTitle = findViewById(R.id.text_title)
         appBarLayout!!.addOnOffsetChangedListener(this)
     }
 
@@ -75,21 +76,21 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 captureDate()
-                searchTarefaDateAndHora()
+                searchTaskDateAndHora()
             } }, delay, interval)
     }
 
     private fun getDateAndHora() {
 
-        tarefasViewModel.listTarefaDateAndHora.observe(this, {
+        taskViewModel.listTaskDateAndHora.observe(this, {
             when (it.size) {
                 0 -> { next_tarefa.text = getString(R.string.Nenhuma_tarefa_prox_dias) }
-                else -> calcularDateAndHora(it)
+                else -> calculateDateAndHora(it)
             }
         })
     }
 
-    private fun calcularDateAndHora(it: ArrayList<EntityTarefaDateAndHora>) {
+    private fun calculateDateAndHora(it: ArrayList<EntityTarefaDateAndHora>) {
 
         val dateCurrent = returnDate()
         val dateS = dateCurrent.split("/")
@@ -117,9 +118,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         val minuteDay = 1440
 
         when {
-            minutes!! <= 0 -> {
-                next_tarefa.text = getString(R.string.tarefas_atras)
-            }
+            minutes!! <= 0 -> { next_tarefa.text = getString(R.string.tarefas_atras) }
             minutes < minuteDay && minutes in 1..60 -> {
                 next_tarefa.text = "Próxima tarefa em $minutes minutos"
             }
@@ -192,47 +191,48 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     }
 
     override fun onEditClick(position: Int) {
+        val complete = recycler_tarefas[position].complete_tarefa.tag
         val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
         val date = recycler_tarefas[position].text_data_tarefa.text.toString()
         val hora = recycler_tarefas[position].text_hora_tarefa.text.toString()
-        dialogAddTarefa(name, date, hora)
+        dialogAddTask(complete.toString(), name, date, hora)
     }
 
     override fun onDeleteClick(position: Int) {
         val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
-        deleteTarefa(name)
+        deleteTask(name)
     }
 
     override fun onCompleteClick(position: Int) {
         val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
         val complete = recycler_tarefas[position].complete_tarefa.tag
-        if (complete == 1){ editTarefaComplete("0", name) }
-        else{ editTarefaComplete("1", name) }
+        if (complete == 1){ editTaskComplete("0", name) }
+        else{ editTaskComplete("1", name) }
     }
 
-    private fun searchTarefaInit() {
-        tarefasViewModel.getTarefasInit()
+    private fun searchTaskInit() {
+        taskViewModel.getTasksInit()
     }
 
-    private fun searchTarefa() {
-        tarefasViewModel.getTarefas()
+    private fun searchTask() {
+        taskViewModel.getTask()
     }
 
-    private fun searchTarefaDateAndHora() {
-        tarefasViewModel.getTarefasDateAndHora("0")
+    private fun searchTaskDateAndHora() {
+        taskViewModel.getTaskDateAndHora("0")
     }
 
     private fun observe() {
-        tarefasViewModel.listTarefa.observe(this, {
+        taskViewModel.listTask.observe(this, {
             when (it.size) {
                 0 -> {
-                    adapterTarefa.updateTarefas(it)
+                    adapterTask.updateTarefas(it)
                     progress_tarefa.visibility = View.GONE
                     text_preguica.visibility = View.VISIBLE
                     image_preguica.visibility = View.VISIBLE
                 }
                 else -> {
-                    adapterTarefa.updateTarefas(it)
+                    adapterTask.updateTarefas(it)
                     progress_tarefa.visibility = View.GONE
                     text_preguica.visibility = View.GONE
                     image_preguica.visibility = View.GONE
@@ -251,7 +251,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         when (view) {
             option_tarefa -> dialogOption()
             filter_tarefa -> dialogFilter()
-            add_tarefa -> dialogAddTarefa("", "", "")
+            add_tarefa -> dialogAddTask("","", "", "")
         }
     }
 
@@ -271,25 +271,24 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         menuOption.menuInflater.inflate(R.menu.popup, menuOption.menu)
         menuOption.setOnMenuItemClickListener { item ->
             when (item.itemId){
-                R.id.todas -> searchTarefa()
-                R.id.completas -> tarefasViewModel.getTarefasCompleteOrIncomplete("1")
-                R.id.incompletas -> tarefasViewModel.getTarefasCompleteOrIncomplete("0")
+                R.id.todas -> searchTask()
+                R.id.completas -> taskViewModel.getTaskCompleteOrIncomplete("1")
+                R.id.incompletas -> taskViewModel.getTaskCompleteOrIncomplete("0")
             }
             true
         }
         menuOption.show()
     }
 
-    private fun dialogAddTarefa(nameEdit: String, dateEdit: String, horaEdit: String) {
+    private fun dialogAddTask(complete: String, nameEdit: String, dateEdit: String, horaEdit: String) {
 
         val inflateView = layoutInflater.inflate(R.layout.dialog_add_tarefa, null)
-        val textTarefa = inflateView.findViewById<EditText>(R.id.text_tarefa)
+        val textTask = inflateView.findViewById<EditText>(R.id.text_tarefa)
         val dateText = inflateView.findViewById<TextView>(R.id.text_data_dialog)
         val horaText = inflateView.findViewById<TextView>(R.id.text_hora_dialog)
         val calendar = inflateView.findViewById<ImageView>(R.id.image_caledar)
         val clock = inflateView.findViewById<ImageView>(R.id.image_clock)
 
-        // Captura data selecionada
         calendar.setOnClickListener {
             val data = Calendar.getInstance()
             val dataTime = DatePickerDialog.OnDateSetListener { _, year, month, dayOfMonth ->
@@ -304,7 +303,6 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
                 data.get(Calendar.MONTH), data.get(Calendar.DAY_OF_MONTH)).show()
         }
 
-        // Captura hora selecionada
         clock.setOnClickListener {
             val cal = Calendar.getInstance()
             val timeSetListener = TimePickerDialog.OnTimeSetListener { _, hour, minute ->
@@ -330,16 +328,15 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             alertDialog.setCancelable(false)
             alertDialog.setPositiveButton(getString(R.string.salvar)) { _, _ ->
 
-                val description = textTarefa.text.toString()
+                val description = textTask.text.toString()
                 when {
-                    description.isBlank() -> {
-                        showSnackBar(R.string.preencha)
-                    }
-                    tarefasViewModel.getDescription(description) -> {
+                    description.isBlank() -> showSnackBar(R.string.preencha)
+                    taskViewModel.getDescription(description) -> {
                         showSnackBar(R.string.descricao_existe)
                     }
                     else -> {
-                        saveTarefa(description, dateText.text.toString(), horaText.text.toString())
+                        saveTask(EntityTask(0, "0", description, dateText.text.toString(),
+                            horaText.text.toString()))
                     }
                 }
             }
@@ -349,7 +346,7 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             alertDialog.create().show()
 
         } else {
-            textTarefa.setText(nameEdit)
+            textTask.setText(nameEdit)
             dateText.text = dateEdit
             horaText.text = horaEdit
 
@@ -359,13 +356,13 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
             alertDialog.setCancelable(false)
             alertDialog.setPositiveButton(R.string.editar) { _, _ ->
 
-                val description = textTarefa.text.toString()
+                val description = textTask.text.toString()
                 when  {
                     description.isBlank() -> {
                         showSnackBar(R.string.preencha)
                     }
-                    else -> editTarefa(nameEdit, description, dateText.text.toString(),
-                        horaText.text.toString())
+                    else -> editTasks(EditTask(complete, nameEdit, description,
+                        dateText.text.toString(), horaText.text.toString()))
                 }
             }
             alertDialog.setNegativeButton(getString(R.string.cancelar)) { _, _ ->
@@ -375,25 +372,25 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun saveTarefa(descrip: String, date: String, hora: String) {
+    private fun saveTask(entityTask: EntityTask) {
 
         when {
-            tarefasViewModel.setTarefas("0", descrip, date, hora) -> {
+            taskViewModel.setTasks(entityTask) -> {
                 showSnackBar(R.string.adicionado_sucesso)
-                searchTarefa()
-                searchTarefaDateAndHora()
+                searchTask()
+                searchTaskDateAndHora()
             }
             else -> showSnackBar(R.string.nao_adicionado)
         }
     }
 
-    private fun editTarefa(name: String, nameEdit: String, date: String, hora: String) {
+    private fun editTasks(editTask: EditTask) {
 
         when {
-            tarefasViewModel.editTarefas("0", name, nameEdit, date, hora) -> {
+            taskViewModel.editTasks(editTask) -> {
                 showSnackBar(R.string.editado_sucesso)
-                searchTarefa()
-                searchTarefaDateAndHora()
+                searchTask()
+                searchTaskDateAndHora()
             }
             else -> {
                 showSnackBar(R.string.nao_editado)
@@ -401,16 +398,16 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun editTarefaComplete(complete: String, name: String) {
+    private fun editTaskComplete(complete: String, name: String) {
 
         when {
-            tarefasViewModel.editTarefasComplete(complete, name) -> {
+            taskViewModel.editTasksComplete(complete, name) -> {
                 if (complete == "1"){
                     showSnackBar(R.string.completa)
                 }
                 else showSnackBar(R.string.incompleta)
-                searchTarefa()
-                searchTarefaDateAndHora()
+                searchTask()
+                searchTaskDateAndHora()
             }
             else -> {
                 showSnackBar(R.string.nao_editado)
@@ -418,12 +415,12 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
         }
     }
 
-    private fun deleteTarefa(descrip: String) {
+    private fun deleteTask(description: String) {
         when {
-            tarefasViewModel.deleteTarefas(descrip) -> {
+            taskViewModel.deleteTasks(description) -> {
                 showSnackBar(R.string.excluido_sucesso)
-                searchTarefa()
-                searchTarefaDateAndHora()
+                searchTask()
+                searchTaskDateAndHora()
             }
             else -> {
                 showSnackBar(R.string.nao_excluido)
@@ -451,12 +448,12 @@ class ActivityTarefa : FragmentActivity(), View.OnClickListener, OnItemClickList
     private fun handleToolbarTitleVisibility(percentage: Float) {
         if (percentage >= showTitleToolBar) {
             if (!titleVisible) {
-                startAlphaAnimation(title!!, animationDuration.toLong(), View.VISIBLE)
+                startAlphaAnimation(textTitle!!, animationDuration.toLong(), View.VISIBLE)
                 titleVisible = true
             }
         } else {
             if (titleVisible) {
-                startAlphaAnimation(title!!, animationDuration.toLong(), View.INVISIBLE)
+                startAlphaAnimation(textTitle!!, animationDuration.toLong(), View.INVISIBLE)
                 titleVisible = false
             }
         }

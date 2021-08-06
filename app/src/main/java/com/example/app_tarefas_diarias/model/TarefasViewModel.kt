@@ -3,53 +3,54 @@ package com.example.app_tarefas_diarias.model
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.app_tarefas_diarias.entity.EntityTarefa
+import com.example.app_tarefas_diarias.entity.EditTask
+import com.example.app_tarefas_diarias.entity.EntityTask
 import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
 import com.example.app_tarefas_diarias.repository.RepositoryTarefas
 import kotlinx.coroutines.*
 
 class TarefasViewModel (private val repository: RepositoryTarefas): ViewModel() {
 
-    private val vListTarefa = MutableLiveData<ArrayList<EntityTarefa>>()
-    val listTarefa: LiveData<ArrayList<EntityTarefa>> = vListTarefa
+    private val vListTask = MutableLiveData<ArrayList<EntityTask>>()
+    val listTask: LiveData<ArrayList<EntityTask>> = vListTask
 
-    private val mListTarefaDateAndHora = MutableLiveData<ArrayList<EntityTarefaDateAndHora>>()
-    val listTarefaDateAndHora: LiveData<ArrayList<EntityTarefaDateAndHora>> = mListTarefaDateAndHora
+    private val vListTaskDateAndHora = MutableLiveData<ArrayList<EntityTarefaDateAndHora>>()
+    val listTaskDateAndHora: LiveData<ArrayList<EntityTarefaDateAndHora>> = vListTaskDateAndHora
 
-    fun getTarefasInit(){
+    fun getTasksInit(){
         CoroutineScope(Dispatchers.Main).launch {
             delay(1000)
-            val listTarefas = withContext(Dispatchers.Default) {
-                    repository.getTarefas()
+            val listTasks = withContext(Dispatchers.Default) {
+                    repository.getTasks()
                 }
-            vListTarefa.value = listTarefas
+            vListTask.value = listTasks
         }
     }
 
-    fun getTarefas(){
+    fun getTask(){
         CoroutineScope(Dispatchers.Main).launch {
-            val listTarefas = withContext(Dispatchers.Default) {
-                repository.getTarefas()
+            val listTasks = withContext(Dispatchers.Default) {
+                repository.getTasks()
             }
-            vListTarefa.value = listTarefas
+            vListTask.value = listTasks
         }
     }
 
-    fun getTarefasCompleteOrIncomplete(complete: String){
+    fun getTaskCompleteOrIncomplete(complete: String){
         CoroutineScope(Dispatchers.Main).launch {
-            val listTarefas = withContext(Dispatchers.Default) {
-                repository.getTarefasCompleteOrIncomplete(complete)
+            val listTasks = withContext(Dispatchers.Default) {
+                repository.getTasksCompleteOrIncomplete(complete)
             }
-            vListTarefa.value = listTarefas
+            vListTask.value = listTasks
         }
     }
 
-    fun getTarefasDateAndHora(complete: String){
+    fun getTaskDateAndHora(complete: String){
         CoroutineScope(Dispatchers.Main).launch {
-            val listTarefasDateAndHora = withContext(Dispatchers.Default) {
-                repository.getTarefasDateAndHora(complete)
+            val listTasksDateAndHora = withContext(Dispatchers.Default) {
+                repository.getTasksDateAndHora(complete)
             }
-            mListTarefaDateAndHora.value = listTarefasDateAndHora
+            vListTaskDateAndHora.value = listTasksDateAndHora
         }
     }
 
@@ -57,20 +58,19 @@ class TarefasViewModel (private val repository: RepositoryTarefas): ViewModel() 
         return repository.getDescription(name)
     }
 
-    fun setTarefas(complete: String, descrip: String, date: String, hora: String): Boolean {
-        return repository.setTarefas(complete, descrip, date, hora)
+    fun setTasks(entityTask: EntityTask): Boolean {
+        return repository.setTask(entityTask)
     }
 
-    fun editTarefas(complete: String, descrip: String, nameNew: String, date: String,
-                    hora: String): Boolean {
-        return repository.editTarefas(complete, descrip, nameNew, date, hora)
+    fun editTasks(editTask: EditTask): Boolean {
+        return repository.editTasks(editTask)
     }
 
-    fun editTarefasComplete(completeCurrent: String, name: String): Boolean {
-        return repository.editTarefasComplete(completeCurrent, name)
+    fun editTasksComplete(completeCurrent: String, name: String): Boolean {
+        return repository.editTasksComplete(completeCurrent, name)
     }
 
-    fun deleteTarefas(descrip: String): Boolean {
-        return repository.deleteTarefas(descrip)
+    fun deleteTasks(description: String): Boolean {
+        return repository.deleteTask(description)
     }
 }

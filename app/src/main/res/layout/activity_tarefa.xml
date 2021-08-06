@@ -27,7 +27,7 @@
                 android:background="@color/colorPrimaryDark"
                 android:orientation="vertical"
                 app:layout_collapseMode="parallax"
-                app:layout_collapseParallaxMultiplier="0.5"
+                app:layout_collapseParallaxMultiplier="0.2"
                 android:paddingHorizontal="20dp">
 
                 <TextView

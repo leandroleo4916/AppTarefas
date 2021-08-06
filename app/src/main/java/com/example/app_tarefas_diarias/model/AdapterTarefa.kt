@@ -9,13 +9,13 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.example.app_tarefas_diarias.R
 import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
-import com.example.app_tarefas_diarias.entity.EntityTarefa
+import com.example.app_tarefas_diarias.entity.EntityTask
 import kotlinx.android.synthetic.main.recycler_tarefas.view.*
 
 class AdapterTarefa(private val application: Application, private val listener: OnItemClickListener
                     ): RecyclerView.Adapter<AdapterTarefa.ViewHolderTarefa>() {
 
-    private var mListTarefa: ArrayList<EntityTarefa> = arrayListOf()
+    private var mListTask: ArrayList<EntityTask> = arrayListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderTarefa {
 
@@ -30,12 +30,12 @@ class AdapterTarefa(private val application: Application, private val listener: 
 
     override fun onBindViewHolder(holderTarefa: ViewHolderTarefa, position: Int) {
 
-        val fullTarefa = mListTarefa[position]
+        val fullTarefa = mListTask[position]
         holderTarefa.bind(fullTarefa)
     }
 
     override fun getItemCount(): Int {
-        return mListTarefa.count()
+        return mListTask.count()
     }
 
     inner class ViewHolderTarefa(itemView: View) : RecyclerView.ViewHolder(itemView),
@@ -48,13 +48,13 @@ class AdapterTarefa(private val application: Application, private val listener: 
             itemView.complete_tarefa.setOnClickListener(this)
         }
 
-        fun bind(tarefa: EntityTarefa){
+        fun bind(task: EntityTask){
 
-            itemView.text_nome_tarefa.text = tarefa.description
-            itemView.text_data_tarefa.text = tarefa.date
-            itemView.text_hora_tarefa.text = tarefa.hora
+            itemView.text_nome_tarefa.text = task.description
+            itemView.text_data_tarefa.text = task.date
+            itemView.text_hora_tarefa.text = task.hora
 
-            if (tarefa.complete == "0") {
+            if (task.complete == "0") {
                 itemView.complete_tarefa.setImageResource(R.drawable.ic_imcompleto)
                 itemView.complete_tarefa.tag = 0
             }
@@ -74,12 +74,12 @@ class AdapterTarefa(private val application: Application, private val listener: 
         }
     }
 
-    fun updateTarefas(list: ArrayList<EntityTarefa>){
+    fun updateTarefas(list: ArrayList<EntityTask>){
         if (list.size > 1) {
-            mListTarefa = list.reversed() as ArrayList<EntityTarefa>
+            mListTask = list.reversed() as ArrayList<EntityTask>
             notifyDataSetChanged()
         }else {
-            mListTarefa = list
+            mListTask = list
             notifyDataSetChanged()
         }
     }

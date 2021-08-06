@@ -30,4 +30,7 @@
     <string name="_18_00">18:00</string>
     <string name="tarefas_atras">Você tem tarefas incomplestas vencidas</string>
     <string name="Nenhuma_tarefa_prox_dias">Nenhuma tarefa incompleta nos próximos dias</string>
+    <string name="hora">Hora</string>
+    <string name="descricao">Descrição</string>
+    <string name="data">Data</string>
 </resources>

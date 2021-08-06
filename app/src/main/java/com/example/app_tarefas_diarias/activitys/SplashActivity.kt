@@ -23,7 +23,7 @@ class SplashActivity : AppCompatActivity() {
     }
 
     private fun showTarefaActivity() {
-        val intent = Intent(this@SplashActivity, ActivityTarefa::class.java)
+        val intent = Intent(this@SplashActivity, ActivityTask::class.java)
         startActivity(intent)
         finish()
     }

@@ -4,22 +4,24 @@ import android.content.ContentValues
 import android.database.Cursor
 import com.example.app_tarefas_diarias.constants.ConstantsTarefa
 import com.example.app_tarefas_diarias.database.DataBase
-import com.example.app_tarefas_diarias.entity.EntityTarefa
+import com.example.app_tarefas_diarias.entity.EditTask
+import com.example.app_tarefas_diarias.entity.EntityTask
 import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import kotlin.collections.ArrayList
 
 class RepositoryTarefas(private val dataBase: DataBase) {
 
-    fun setTarefas(complete: String, descrip: String, date: String, hora: String): Boolean {
+    fun setTask(entityTask: EntityTask): Boolean {
 
         return try {
             val db = dataBase.writableDatabase
             val insertValues = ContentValues()
-            insertValues.put(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE, complete)
-            insertValues.put(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION, descrip)
-            insertValues.put(ConstantsTarefa.TAREFA.COLUNAS.DATE, date)
-            insertValues.put(ConstantsTarefa.TAREFA.COLUNAS.HORA, hora)
+            insertValues.put(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE, entityTask.complete)
+            insertValues.put(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION, entityTask.description)
+            insertValues.put(ConstantsTarefa.TAREFA.COLUNAS.DATE, entityTask.date)
+            insertValues.put(ConstantsTarefa.TAREFA.COLUNAS.HORA, entityTask.hora)
 
             db.insert(ConstantsTarefa.TAREFA.TABLE_NAME, null, insertValues)
             true
@@ -29,11 +31,11 @@ class RepositoryTarefas(private val dataBase: DataBase) {
         }
     }
 
-    suspend fun getTarefas(): ArrayList<EntityTarefa> {
+    suspend fun getTasks(): ArrayList<EntityTask> {
 
         return withContext(Dispatchers.Default) {
 
-            val tarefa: ArrayList<EntityTarefa> = arrayListOf()
+            val task: ArrayList<EntityTask> = arrayListOf()
             try {
                 val cursor: Cursor
                 val db = dataBase.readableDatabase
@@ -62,21 +64,21 @@ class RepositoryTarefas(private val dataBase: DataBase) {
                         val hora = cursor.getString(cursor.getColumnIndex(
                             ConstantsTarefa.TAREFA.COLUNAS.HORA))
 
-                        tarefa.add(EntityTarefa(id, complete, description, date, hora))
+                        task.add(EntityTask(id, complete, description, date, hora))
                     }
                 }
                 cursor?.close()
             } catch (e: Exception) {
             }
-            tarefa
+            task
         }
     }
 
-    suspend fun getTarefasCompleteOrIncomplete(complete: String): ArrayList<EntityTarefa> {
+    suspend fun getTasksCompleteOrIncomplete(complete: String): ArrayList<EntityTask> {
 
         return withContext(Dispatchers.Default) {
 
-            val tarefa: ArrayList<EntityTarefa> = arrayListOf()
+            val task: ArrayList<EntityTask> = arrayListOf()
             try {
                 val cursor: Cursor
                 val db = dataBase.readableDatabase
@@ -107,30 +109,29 @@ class RepositoryTarefas(private val dataBase: DataBase) {
                         val hora = cursor.getString(cursor.getColumnIndex(
                             ConstantsTarefa.TAREFA.COLUNAS.HORA))
 
-                        tarefa.add(EntityTarefa(id, completo, description, date, hora))
+                        task.add(EntityTask(id, completo, description, date, hora))
                     }
                 }
                 cursor?.close()
             } catch (e: Exception) {
             }
-            tarefa
+            task
         }
     }
 
-    fun editTarefas(complete: String, descrip: String, nameNew: String, date: String,
-                    hora: String ): Boolean {
+    fun editTasks(editTask: EditTask): Boolean {
 
         return try {
             val db = dataBase.writableDatabase
 
             val contentValues = ContentValues()
-            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE, complete)
-            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION, nameNew)
-            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.DATE, date)
-            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.HORA, hora)
+            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.COMPLETE, editTask.complete)
+            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION, editTask.name)
+            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.DATE, editTask.date)
+            contentValues.put(ConstantsTarefa.TAREFA.COLUNAS.HORA, editTask.hora)
 
             val selection = ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION + " = ?"
-            val args = arrayOf(descrip)
+            val args = arrayOf(editTask.description)
 
             db.update(ConstantsTarefa.TAREFA.TABLE_NAME, contentValues, selection, args)
 
@@ -141,7 +142,7 @@ class RepositoryTarefas(private val dataBase: DataBase) {
         }
     }
 
-    fun editTarefasComplete(completeCurrent: String, name: String): Boolean {
+    fun editTasksComplete(completeCurrent: String, name: String): Boolean {
 
         return try {
             val db = dataBase.writableDatabase
@@ -160,12 +161,12 @@ class RepositoryTarefas(private val dataBase: DataBase) {
         }
     }
 
-    fun deleteTarefas(descrip: String): Boolean {
+    fun deleteTask(description: String): Boolean {
 
         return try {
             val db = dataBase.writableDatabase
             val selection = ConstantsTarefa.TAREFA.COLUNAS.DESCRIPTION + " = ?"
-            val args = arrayOf(descrip)
+            val args = arrayOf(description)
 
             db.delete(ConstantsTarefa.TAREFA.TABLE_NAME, selection, args)
             true
@@ -200,7 +201,7 @@ class RepositoryTarefas(private val dataBase: DataBase) {
         return false
     }
 
-    suspend fun getTarefasDateAndHora(complete: String): ArrayList<EntityTarefaDateAndHora> {
+    suspend fun getTasksDateAndHora(complete: String): ArrayList<EntityTarefaDateAndHora> {
 
         return withContext(Dispatchers.Default) {
 
