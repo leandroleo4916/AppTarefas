@@ -16,10 +16,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.app_tarefas_diarias.R
 import com.example.app_tarefas_diarias.entity.EditTask
 import com.example.app_tarefas_diarias.entity.EntityTask
-import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
+import com.example.app_tarefas_diarias.entity.EntityTaskDateAndHora
 import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
-import com.example.app_tarefas_diarias.model.AdapterTarefa
-import com.example.app_tarefas_diarias.model.TarefasViewModel
+import com.example.app_tarefas_diarias.model.AdapterTask
+import com.example.app_tarefas_diarias.model.TasksViewModel
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_tarefa.*
@@ -34,8 +34,8 @@ import kotlin.math.abs
 class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListener,
     AppBarLayout.OnOffsetChangedListener {
 
-    private lateinit var adapterTask: AdapterTarefa
-    private val taskViewModel: TarefasViewModel by viewModel()
+    private lateinit var adapterTask: AdapterTask
+    private val taskViewModel: TasksViewModel by viewModel()
     private lateinit var coordinator: CoordinatorLayout
     private val showTitleToolBar = 0.9f
     private val animationDuration = 200
@@ -49,7 +49,7 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
 
         val recycler = findViewById<RecyclerView>(R.id.recycler_tarefas)
         recycler.layoutManager = LinearLayoutManager(this)
-        adapterTask = AdapterTarefa(application, this)
+        adapterTask = AdapterTask(application, this)
         recycler.adapter = adapterTask
 
         instanceView()
@@ -90,7 +90,7 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
         })
     }
 
-    private fun calculateDateAndHora(it: ArrayList<EntityTarefaDateAndHora>) {
+    private fun calculateDateAndHora(it: ArrayList<EntityTaskDateAndHora>) {
 
         val dateCurrent = returnDate()
         val dateS = dateCurrent.split("/")

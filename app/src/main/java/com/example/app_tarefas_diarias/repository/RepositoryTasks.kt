@@ -6,12 +6,12 @@ import com.example.app_tarefas_diarias.constants.ConstantsTarefa
 import com.example.app_tarefas_diarias.database.DataBase
 import com.example.app_tarefas_diarias.entity.EditTask
 import com.example.app_tarefas_diarias.entity.EntityTask
-import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
+import com.example.app_tarefas_diarias.entity.EntityTaskDateAndHora
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlin.collections.ArrayList
 
-class RepositoryTarefas(private val dataBase: DataBase) {
+class RepositoryTasks(private val dataBase: DataBase) {
 
     fun setTask(entityTask: EntityTask): Boolean {
 
@@ -201,11 +201,11 @@ class RepositoryTarefas(private val dataBase: DataBase) {
         return false
     }
 
-    suspend fun getTasksDateAndHora(complete: String): ArrayList<EntityTarefaDateAndHora> {
+    suspend fun getTasksDateAndHora(complete: String): ArrayList<EntityTaskDateAndHora> {
 
         return withContext(Dispatchers.Default) {
 
-            val tarefa: ArrayList<EntityTarefaDateAndHora> = arrayListOf()
+            val task: ArrayList<EntityTaskDateAndHora> = arrayListOf()
             try {
                 val cursor: Cursor
                 val db = dataBase.readableDatabase
@@ -227,13 +227,13 @@ class RepositoryTarefas(private val dataBase: DataBase) {
                         val hora = cursor.getString(cursor.getColumnIndex(
                             ConstantsTarefa.TAREFA.COLUNAS.HORA))
 
-                        tarefa.add(EntityTarefaDateAndHora(date, hora))
+                        task.add(EntityTaskDateAndHora(date, hora))
                     }
                 }
                 cursor?.close()
             } catch (e: Exception) {
             }
-            tarefa
+            task
         }
     }
 }

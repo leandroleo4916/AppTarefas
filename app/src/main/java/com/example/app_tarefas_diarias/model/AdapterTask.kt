@@ -12,12 +12,12 @@ import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
 import com.example.app_tarefas_diarias.entity.EntityTask
 import kotlinx.android.synthetic.main.recycler_tarefas.view.*
 
-class AdapterTarefa(private val application: Application, private val listener: OnItemClickListener
-                    ): RecyclerView.Adapter<AdapterTarefa.ViewHolderTarefa>() {
+class AdapterTask(private val application: Application, private val listener: OnItemClickListener
+                    ): RecyclerView.Adapter<AdapterTask.ViewHolderTask>() {
 
     private var mListTask: ArrayList<EntityTask> = arrayListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderTarefa {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolderTask {
 
         val item = LayoutInflater.from(parent.context).inflate(
             R.layout.recycler_tarefas, parent, false)
@@ -25,20 +25,20 @@ class AdapterTarefa(private val application: Application, private val listener: 
         val animation: Animation = AnimationUtils.loadAnimation( application, R.anim.show)
         item.startAnimation(animation)
 
-        return ViewHolderTarefa(item)
+        return ViewHolderTask(item)
     }
 
-    override fun onBindViewHolder(holderTarefa: ViewHolderTarefa, position: Int) {
+    override fun onBindViewHolder(holderTask: ViewHolderTask, position: Int) {
 
-        val fullTarefa = mListTask[position]
-        holderTarefa.bind(fullTarefa)
+        val fullTask = mListTask[position]
+        holderTask.bind(fullTask)
     }
 
     override fun getItemCount(): Int {
         return mListTask.count()
     }
 
-    inner class ViewHolderTarefa(itemView: View) : RecyclerView.ViewHolder(itemView),
+    inner class ViewHolderTask(itemView: View) : RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
 
         init {

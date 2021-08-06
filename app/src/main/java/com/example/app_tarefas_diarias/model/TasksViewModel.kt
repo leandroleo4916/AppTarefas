@@ -5,17 +5,17 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.app_tarefas_diarias.entity.EditTask
 import com.example.app_tarefas_diarias.entity.EntityTask
-import com.example.app_tarefas_diarias.entity.EntityTarefaDateAndHora
-import com.example.app_tarefas_diarias.repository.RepositoryTarefas
+import com.example.app_tarefas_diarias.entity.EntityTaskDateAndHora
+import com.example.app_tarefas_diarias.repository.RepositoryTasks
 import kotlinx.coroutines.*
 
-class TarefasViewModel (private val repository: RepositoryTarefas): ViewModel() {
+class TasksViewModel (private val repository: RepositoryTasks): ViewModel() {
 
     private val vListTask = MutableLiveData<ArrayList<EntityTask>>()
     val listTask: LiveData<ArrayList<EntityTask>> = vListTask
 
-    private val vListTaskDateAndHora = MutableLiveData<ArrayList<EntityTarefaDateAndHora>>()
-    val listTaskDateAndHora: LiveData<ArrayList<EntityTarefaDateAndHora>> = vListTaskDateAndHora
+    private val vListTaskDateAndHora = MutableLiveData<ArrayList<EntityTaskDateAndHora>>()
+    val listTaskDateAndHora: LiveData<ArrayList<EntityTaskDateAndHora>> = vListTaskDateAndHora
 
     fun getTasksInit(){
         CoroutineScope(Dispatchers.Main).launch {
