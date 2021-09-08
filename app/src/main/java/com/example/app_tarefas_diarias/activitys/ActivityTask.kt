@@ -17,6 +17,8 @@ import com.example.app_tarefas_diarias.R
 import com.example.app_tarefas_diarias.entity.EditTask
 import com.example.app_tarefas_diarias.entity.EntityTask
 import com.example.app_tarefas_diarias.entity.EntityTaskDateAndHora
+import com.example.app_tarefas_diarias.interfaces.ITaskListener
+import com.example.app_tarefas_diarias.interfaces.ITaskViewModel
 import com.example.app_tarefas_diarias.interfaces.OnItemClickListener
 import com.example.app_tarefas_diarias.model.AdapterTask
 import com.example.app_tarefas_diarias.model.TasksViewModel
@@ -24,6 +26,7 @@ import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_tarefa.*
 import kotlinx.android.synthetic.main.recycler_tarefas.view.*
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.time.Duration
@@ -31,7 +34,7 @@ import java.time.LocalDateTime
 import java.util.*
 import kotlin.math.abs
 
-class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListener,
+class ActivityTask : FragmentActivity(), ITaskViewModel, View.OnClickListener, OnItemClickListener,
     AppBarLayout.OnOffsetChangedListener {
 
     private lateinit var adapterTask: AdapterTask
@@ -56,7 +59,7 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
         startAlphaAnimation(textTitle!!, 0, View.INVISIBLE)
 
         listener()
-        searchTaskInit()
+        getTask()
         observe()
         updateDateHour()
         getDateAndHora()
@@ -76,7 +79,7 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
         timer.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
                 captureDate()
-                searchTaskDateAndHora()
+                getTaskDateAndHora("0")
             } }, delay, interval)
     }
 
@@ -120,7 +123,7 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
         when {
             minutes!! <= 0 -> { next_tarefa.text = getString(R.string.tarefas_atras) }
             minutes < minuteDay && minutes in 1..60 -> {
-                next_tarefa.text = "Próxima tarefa em $minutes minutos"
+                setTextStatus("Próxima tarefa em $minutes minutos")
             }
             minutes in 61..minuteDay -> {
                 var min = minutes
@@ -130,8 +133,8 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
                     hour++
                 }
                 when (hour) {
-                    1 -> next_tarefa.text = "Próxima tarefa em $hour hora e $min minutos"
-                    else -> next_tarefa.text = "Próxima tarefa em $hour horas e $min minutos"
+                    1 -> setTextStatus("Próxima tarefa em $hour hora e $min minutos")
+                    else -> setTextStatus("Próxima tarefa em $hour horas e $min minutos")
                 }
             }
             else -> {
@@ -153,21 +156,23 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
                         }
                         when (day) {
                             1 -> {
-                                next_tarefa.text =
-                                    "Próxima tarefa em $day dia, $hour horas e $minRest minutos"
+                                setTextStatus("Próxima tarefa em $day dia, $hour horas e $minRest minutos")
                             }
                             else -> {
-                                next_tarefa.text =
-                                    "Próxima tarefa em $day dias, $hour horas e $minRest minutos"
+                                setTextStatus("Próxima tarefa em $day dias, $hour horas e $minRest minutos")
                             }
                         }
                     }
                     else -> {
-                        next_tarefa.text = "Próxima tarefa em $day dia e $min minutos"
+                        setTextStatus("Próxima tarefa em $day dia e $min minutos")
                     }
                 }
             }
         }
+    }
+
+    private fun setTextStatus(text: String){
+        next_tarefa.text = text
     }
 
     private fun captureDate(){
@@ -200,39 +205,35 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
 
     override fun onDeleteClick(position: Int) {
         val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
-        deleteTask(name)
+        deleteTasks(name)
     }
 
     override fun onCompleteClick(position: Int) {
         val name = recycler_tarefas[position].text_nome_tarefa.text.toString()
         val complete = recycler_tarefas[position].complete_tarefa.tag
-        if (complete == 1){ editTaskComplete("0", name) }
-        else{ editTaskComplete("1", name) }
+        if (complete == 1){ editTasksComplete("0", name) }
+        else{ editTasksComplete("1", name) }
     }
 
-    private fun searchTaskInit() {
-        taskViewModel.getTasksInit()
-    }
-
-    private fun searchTask() {
+    override fun getTask() {
         taskViewModel.getTask()
     }
 
-    private fun searchTaskDateAndHora() {
-        taskViewModel.getTaskDateAndHora("0")
+    override fun getTaskDateAndHora(complete: String) {
+        taskViewModel.getTaskDateAndHora(complete)
     }
 
     private fun observe() {
         taskViewModel.listTask.observe(this, {
             when (it.size) {
                 0 -> {
-                    adapterTask.updateTarefas(it)
+                    adapterTask.updateTasks(it)
                     progress_tarefa.visibility = View.GONE
                     text_preguica.visibility = View.VISIBLE
                     image_preguica.visibility = View.VISIBLE
                 }
                 else -> {
-                    adapterTask.updateTarefas(it)
+                    adapterTask.updateTasks(it)
                     progress_tarefa.visibility = View.GONE
                     text_preguica.visibility = View.GONE
                     image_preguica.visibility = View.GONE
@@ -271,7 +272,7 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
         menuOption.menuInflater.inflate(R.menu.popup, menuOption.menu)
         menuOption.setOnMenuItemClickListener { item ->
             when (item.itemId){
-                R.id.todas -> searchTask()
+                R.id.todas -> getTask()
                 R.id.completas -> taskViewModel.getTaskCompleteOrIncomplete("1")
                 R.id.incompletas -> taskViewModel.getTaskCompleteOrIncomplete("0")
             }
@@ -335,7 +336,7 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
                         showSnackBar(R.string.descricao_existe)
                     }
                     else -> {
-                        saveTask(EntityTask(0, "0", description, dateText.text.toString(),
+                        setTasks(EntityTask(0, "0", description, dateText.text.toString(),
                             horaText.text.toString()))
                     }
                 }
@@ -372,33 +373,35 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
         }
     }
 
-    private fun saveTask(entityTask: EntityTask) {
+    override fun setTasks(entityTask: EntityTask): Boolean {
 
         when {
             taskViewModel.setTasks(entityTask) -> {
                 showSnackBar(R.string.adicionado_sucesso)
-                searchTask()
-                searchTaskDateAndHora()
+                getTask()
+                getTaskDateAndHora("0")
             }
             else -> showSnackBar(R.string.nao_adicionado)
         }
+        return true
     }
 
-    private fun editTasks(editTask: EditTask) {
+    override fun editTasks(editTask: EditTask): Boolean {
 
         when {
             taskViewModel.editTasks(editTask) -> {
                 showSnackBar(R.string.editado_sucesso)
-                searchTask()
-                searchTaskDateAndHora()
+                getTask()
+                getTaskDateAndHora("0")
             }
             else -> {
                 showSnackBar(R.string.nao_editado)
             }
         }
+        return true
     }
 
-    private fun editTaskComplete(complete: String, name: String) {
+    override fun editTasksComplete(complete: String, name: String): Boolean {
 
         when {
             taskViewModel.editTasksComplete(complete, name) -> {
@@ -406,26 +409,29 @@ class ActivityTask : FragmentActivity(), View.OnClickListener, OnItemClickListen
                     showSnackBar(R.string.completa)
                 }
                 else showSnackBar(R.string.incompleta)
-                searchTask()
-                searchTaskDateAndHora()
+                getTask()
+                getTaskDateAndHora("0")
             }
             else -> {
                 showSnackBar(R.string.nao_editado)
             }
         }
+        return true
     }
 
-    private fun deleteTask(description: String) {
+    override fun deleteTasks(description: String): Boolean {
+
         when {
             taskViewModel.deleteTasks(description) -> {
                 showSnackBar(R.string.excluido_sucesso)
-                searchTask()
-                searchTaskDateAndHora()
+                getTask()
+                getTaskDateAndHora("0")
             }
             else -> {
                 showSnackBar(R.string.nao_excluido)
             }
         }
+        return true
     }
 
     private fun showSnackBar(message: Int) {

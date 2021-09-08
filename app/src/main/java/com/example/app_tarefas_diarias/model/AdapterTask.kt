@@ -74,7 +74,7 @@ class AdapterTask(private val application: Application, private val listener: On
         }
     }
 
-    fun updateTarefas(list: ArrayList<EntityTask>){
+    fun updateTasks(list: ArrayList<EntityTask>){
         if (list.size > 1) {
             mListTask = list.reversed() as ArrayList<EntityTask>
             notifyDataSetChanged()

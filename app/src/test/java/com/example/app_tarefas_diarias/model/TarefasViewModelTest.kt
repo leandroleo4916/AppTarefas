@@ -1,3 +1,0 @@
-package com.example.app_tarefas_diarias.model
-
-class TarefasViewModelTest

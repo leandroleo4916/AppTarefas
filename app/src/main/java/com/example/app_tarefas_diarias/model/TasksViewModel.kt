@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import com.example.app_tarefas_diarias.entity.EditTask
 import com.example.app_tarefas_diarias.entity.EntityTask
 import com.example.app_tarefas_diarias.entity.EntityTaskDateAndHora
+import com.example.app_tarefas_diarias.interfaces.ITaskListener
+import com.example.app_tarefas_diarias.interfaces.ITaskViewModel
 import com.example.app_tarefas_diarias.repository.RepositoryTasks
 import kotlinx.coroutines.*
 
-class TasksViewModel (private val repository: RepositoryTasks): ViewModel() {
+class TasksViewModel (private val repository: RepositoryTasks): ViewModel(), ITaskViewModel {
 
     private val vListTask = MutableLiveData<ArrayList<EntityTask>>()
     val listTask: LiveData<ArrayList<EntityTask>> = vListTask
@@ -17,17 +19,7 @@ class TasksViewModel (private val repository: RepositoryTasks): ViewModel() {
     private val vListTaskDateAndHora = MutableLiveData<ArrayList<EntityTaskDateAndHora>>()
     val listTaskDateAndHora: LiveData<ArrayList<EntityTaskDateAndHora>> = vListTaskDateAndHora
 
-    fun getTasksInit(){
-        CoroutineScope(Dispatchers.Main).launch {
-            delay(1000)
-            val listTasks = withContext(Dispatchers.Default) {
-                    repository.getTasks()
-                }
-            vListTask.value = listTasks
-        }
-    }
-
-    fun getTask(){
+    override fun getTask(){
         CoroutineScope(Dispatchers.Main).launch {
             val listTasks = withContext(Dispatchers.Default) {
                 repository.getTasks()
@@ -45,7 +37,7 @@ class TasksViewModel (private val repository: RepositoryTasks): ViewModel() {
         }
     }
 
-    fun getTaskDateAndHora(complete: String){
+    override fun getTaskDateAndHora(complete: String){
         CoroutineScope(Dispatchers.Main).launch {
             val listTasksDateAndHora = withContext(Dispatchers.Default) {
                 repository.getTasksDateAndHora(complete)
@@ -58,19 +50,19 @@ class TasksViewModel (private val repository: RepositoryTasks): ViewModel() {
         return repository.getDescription(name)
     }
 
-    fun setTasks(entityTask: EntityTask): Boolean {
+    override fun setTasks(entityTask: EntityTask): Boolean {
         return repository.setTask(entityTask)
     }
 
-    fun editTasks(editTask: EditTask): Boolean {
+    override fun editTasks(editTask: EditTask): Boolean {
         return repository.editTasks(editTask)
     }
 
-    fun editTasksComplete(completeCurrent: String, name: String): Boolean {
+    override fun editTasksComplete(completeCurrent: String, name: String): Boolean {
         return repository.editTasksComplete(completeCurrent, name)
     }
 
-    fun deleteTasks(description: String): Boolean {
+    override fun deleteTasks(description: String): Boolean {
         return repository.deleteTask(description)
     }
 }

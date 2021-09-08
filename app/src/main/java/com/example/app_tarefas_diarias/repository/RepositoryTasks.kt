@@ -134,7 +134,6 @@ class RepositoryTasks(private val dataBase: DataBase) {
             val args = arrayOf(editTask.description)
 
             db.update(ConstantsTarefa.TAREFA.TABLE_NAME, contentValues, selection, args)
-
             true
 
         } catch (e: Exception) {
@@ -190,7 +189,6 @@ class RepositoryTasks(private val dataBase: DataBase) {
                 null, null, null)
 
             if (cursor != null && cursor.count > 0) {
-
                 return true
             }
             cursor?.close()

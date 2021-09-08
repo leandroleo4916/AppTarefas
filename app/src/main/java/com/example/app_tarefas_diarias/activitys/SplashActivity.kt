@@ -6,10 +6,10 @@ import android.os.Handler
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentActivity
 import com.example.app_tarefas_diarias.R
 
-class SplashActivity : AppCompatActivity() {
+class SplashActivity : FragmentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
@@ -19,10 +19,10 @@ class SplashActivity : AppCompatActivity() {
         item.startAnimation(animation)
 
         val handle = Handler()
-        handle.postDelayed(Runnable { showTarefaActivity() }, 2000)
+        handle.postDelayed({ showTaskActivity() }, 2000)
     }
 
-    private fun showTarefaActivity() {
+    private fun showTaskActivity() {
         val intent = Intent(this@SplashActivity, ActivityTask::class.java)
         startActivity(intent)
         finish()

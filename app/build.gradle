@@ -8,7 +8,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.example.app_point"
+        applicationId "com.example.app_tarefas_diarias"
         minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
@@ -54,12 +54,12 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1'
 
-    // Core library
-    androidTestImplementation 'androidx.test:core:1.4.0'
-
     // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation 'androidx.test:core:1.4.0'
     androidTestImplementation 'androidx.test:runner:1.4.0'
     androidTestImplementation 'androidx.test:rules:1.4.0'
+    testImplementation 'io.mockk:mockk:1.10.0'
+    androidTestImplementation 'androidx.arch.core:core-testing:2.1.0'
 
     // Espresso dependencies
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
